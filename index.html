@@ -45,90 +45,51 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
-  /* ── PART 1: Behavior Checklist ── */
+  /* ── PART 1 ── */
   .checklist-intro {
-    background: #fff;
-    padding: 20px 24px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.7;
+    background: #fff; padding: 20px 24px; border-bottom: 1px solid #eee;
+    font-size: 14px; color: #555; line-height: 1.7;
   }
   .skill-block {
-    background: #fff;
-    margin: 12px 16px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    overflow: hidden;
-    border: 2px solid transparent;
-    transition: border-color 0.2s;
+    background: #fff; margin: 12px 16px; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;
+    border: 2px solid transparent; transition: border-color 0.2s;
   }
-  .skill-block.unanswered {
-    border-color: #e74c3c;
-  }
-  .skill-block.answered {
-    border-color: #27ae60;
-  }
-  .skill-status {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-left: 8px;
-    font-weight: 600;
-  }
+  .skill-block.unanswered { border-color: #e74c3c; }
+  .skill-block.answered { border-color: #27ae60; }
+  .skill-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 600; }
   .skill-status.done { background: #27ae60; color: white; }
   .skill-status.todo { background: #e74c3c; color: white; }
   .checklist-progress {
-    background: #fff;
-    padding: 10px 24px;
-    border-bottom: 1px solid #eee;
-    font-size: 13px;
-    color: #555;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    background: #fff; padding: 10px 24px; border-bottom: 1px solid #eee;
+    font-size: 13px; color: #555; display: flex; align-items: center; gap: 10px;
   }
   .cl-prog-bar { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
   .cl-prog-fill { height: 100%; background: #27ae60; border-radius: 4px; transition: width 0.3s; }
   .skill-header {
     background: linear-gradient(90deg, #3a5a8c, #4a7ab8);
-    color: white;
-    padding: 14px 18px;
+    color: white; padding: 14px 18px;
+    display: flex; align-items: flex-start; justify-content: space-between;
   }
-  .skill-header { display: flex; align-items: flex-start; justify-content: space-between; }
   .skill-header-text h3 { font-size: 16px; margin-bottom: 4px; }
   .skill-header-text p { font-size: 12px; opacity: 0.85; line-height: 1.5; }
-    .behavior-pairs { padding: 8px 16px 12px; }
+  .behavior-pairs { padding: 8px 16px 12px; }
   .behavior-pair-row {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center; gap: 8px; margin-bottom: 6px;
   }
   .behavior-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-size: 13px;
-    border: 2px solid #eee;
-    background: #fafafa;
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border-radius: 8px; cursor: pointer; transition: all 0.15s;
+    font-size: 13px; border: 2px solid #eee; background: #fafafa;
   }
   .behavior-item:hover { background: #f0f4ff; border-color: #b8cef0; }
   .behavior-item.strong-item { flex-direction: row; }
   .behavior-item.weak-item { flex-direction: row-reverse; text-align: right; }
   .check-box {
-    width: 18px; height: 18px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    transition: all 0.15s;
+    width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 50%;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; transition: all 0.15s;
   }
   .behavior-item.checked-strong { background: #e8f0fb; border-color: #3a5a8c; }
   .behavior-item.checked-strong .check-box { background: #3a5a8c; border-color: #3a5a8c; }
@@ -139,306 +100,206 @@
   .behavior-item * { pointer-events: none; user-select: none; }
   .vs-badge {
     font-size: 10px; font-weight: 700; color: #aaa;
-    background: #f0f0f0; border-radius: 10px;
-    padding: 2px 6px; text-align: center; flex-shrink: 0;
+    background: #f0f0f0; border-radius: 10px; padding: 2px 6px; text-align: center; flex-shrink: 0;
   }
 
-  /* ── PART 2: Questionnaire ── */
+  /* ── PART 2 ── */
   .q-intro {
-    background: #fff;
-    padding: 20px 24px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.7;
+    background: #fff; padding: 20px 24px; border-bottom: 1px solid #eee;
+    font-size: 14px; color: #555; line-height: 1.7;
   }
-  .scale-legend {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin: 12px 0 4px;
-  }
-  .scale-item {
-    background: #f5f5f0;
-    border-radius: 8px;
-    padding: 8px 10px;
-    text-align: center;
-    font-size: 12px;
-  }
+  .scale-legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0 4px; }
+  .scale-item { background: #f5f5f0; border-radius: 8px; padding: 8px 10px; text-align: center; font-size: 12px; }
   .scale-item .num { font-size: 18px; font-weight: 700; color: #3a5a8c; display: block; }
-
   .q-section {
-    background: #fff;
-    margin: 12px 16px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    overflow: hidden;
+    background: #fff; margin: 12px 16px; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;
   }
   .q-section-header {
-    background: linear-gradient(90deg, #3a5a8c, #4a7ab8);
-    color: white;
-    padding: 12px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background: linear-gradient(90deg, #3a5a8c, #4a7ab8); color: white;
+    padding: 12px 18px; display: flex; align-items: center; justify-content: space-between;
   }
   .q-section-header h3 { font-size: 15px; }
-  .section-score-badge {
-    background: rgba(255,255,255,0.25);
-    border-radius: 20px;
-    padding: 3px 12px;
-    font-size: 13px;
-    font-weight: 700;
-  }
+  .section-score-badge { background: rgba(255,255,255,0.25); border-radius: 20px; padding: 3px 12px; font-size: 13px; font-weight: 700; }
   .q-item {
-    padding: 14px 18px;
-    border-bottom: 1px solid #f5f5f0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #f5f5f0;
+    display: flex; align-items: center; gap: 12px;
   }
   .q-item:last-child { border-bottom: none; }
   .q-text { flex: 1; font-size: 14px; line-height: 1.5; }
   .q-num { color: #aaa; font-size: 12px; margin-right: 4px; }
-  .rating-group {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-  }
+  .rating-group { display: flex; gap: 4px; flex-shrink: 0; }
   .rating-btn {
-    width: 32px; height: 32px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    background: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    color: #aaa;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border: 2px solid #e0e0e0; border-radius: 8px;
+    background: #fff; font-size: 13px; font-weight: 600; color: #aaa;
+    cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
   }
   .rating-btn:hover { border-color: #3a5a8c; color: #3a5a8c; }
   .rating-btn.selected { background: #3a5a8c; border-color: #3a5a8c; color: white; }
   .rating-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
   .rating-hint { display: flex; gap: 0; width: 100%; }
   .rating-hint span { flex: 1; text-align: center; font-size: 9px; color: #aaa; line-height: 1.2; width: 32px; }
+  .progress-bar { height: 4px; background: #e0e0e0; position: sticky; top: 92px; z-index: 99; }
+  .progress-fill { height: 100%; background: #5a9bd5; transition: width 0.3s; }
+  .answered-count { text-align: center; font-size: 12px; color: #888; padding: 6px; }
 
   /* ── Results ── */
   .score-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 14px 16px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 14px 16px; background: #fff; border-bottom: 1px solid #eee;
   }
   .score-chip {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: #f0f4fa;
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 12px;
-    color: #555;
+    display: flex; align-items: center; gap: 4px;
+    background: #f0f4fa; border-radius: 20px; padding: 4px 10px; font-size: 12px; color: #555;
   }
-  .score-chip .chip-num {
-    font-weight: 700;
-    font-size: 12px;
-    color: #3a5a8c;
-  }
+  .score-chip .chip-num { font-weight: 700; font-size: 12px; color: #3a5a8c; }
   .result-card {
-    margin: 16px;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    background: #fff;
+    margin: 16px; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08); background: #fff;
   }
-  .result-card-top {
-    display: grid;
-    grid-template-columns: 1fr 1px 1fr;
-  }
-  .result-section {
-    padding: 24px 22px;
-  }
-  .strong-section { background: #fff; }
-  .weak-section { background: #fff; }
-  .result-divider {
-    background: #eee;
-  }
+  .result-card-top { display: grid; grid-template-columns: 1fr 1px 1fr; }
+  .result-section { padding: 24px 22px; }
+  .result-divider { background: #eee; }
   .result-section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 16px;
+    text-transform: uppercase; display: flex; align-items: center; gap: 6px;
   }
   .strong-section .result-section-label { color: #2e6da4; }
   .weak-section .result-section-label { color: #d48e00; }
   .skill-card-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    border-radius: 10px;
-    margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-radius: 10px; margin-bottom: 8px;
   }
   .strong-section .skill-card-item { background: #eef5ff; }
   .weak-section .skill-card-item { background: #fffbee; }
-  .skill-card-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1a1a1a;
-  }
-  .skill-card-score {
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 12px;
-    padding: 2px 9px;
-  }
+  .skill-card-name { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .skill-card-score { font-size: 12px; font-weight: 600; border-radius: 12px; padding: 2px 9px; }
   .strong-section .skill-card-score { background: #2e6da4; color: #fff; }
   .weak-section .skill-card-score { background: #d4a000; color: #fff; }
   .result-card-note {
-    background: #f8f8f8;
-    border-top: 1px solid #eee;
-    color: #aaa;
-    font-size: 12px;
-    padding: 12px 20px;
-    text-align: center;
-    line-height: 1.6;
+    background: #f8f8f8; border-top: 1px solid #eee; color: #aaa;
+    font-size: 12px; padding: 12px 20px; text-align: center; line-height: 1.6;
   }
-  .b-row { border-bottom: 1px solid #f0f0f0; padding: 10px 0; }
-  .b-row:last-child { border-bottom: none; }
-  .b-skill-name { font-size: 13px; font-weight: 700; color: #3a5a8c; margin-bottom: 6px; }
-  .b-score { background: #3a5a8c; color: white; border-radius: 10px; padding: 1px 8px; font-size: 11px; margin-left: 6px; font-weight: 600; }
-  .b-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .b-tag { font-size: 12px; padding: 3px 10px; border-radius: 20px; }
-  .b-s { background: #e8f0fb; color: #2c5282; }
-  .b-w { background: #fde8e8; color: #c0392b; }
 
   .submit-btn {
-    display: block;
-    width: calc(100% - 32px);
-    margin: 16px;
-    padding: 16px;
-    background: linear-gradient(135deg, #3a5a8c, #5a7ab0);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.2s;
+    display: block; width: calc(100% - 32px); margin: 16px; padding: 16px;
+    background: linear-gradient(135deg, #3a5a8c, #5a7ab0); color: white;
+    border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s;
   }
   .submit-btn:hover { opacity: 0.9; }
 
   .sticky-scale {
-    position: sticky;
-    top: 50px;
-    z-index: 98;
-    background: #fff;
-    border-bottom: 1px solid #e8e8e8;
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    position: sticky; top: 50px; z-index: 98; background: #fff;
+    border-bottom: 1px solid #e8e8e8; display: flex; justify-content: center;
+    gap: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
   }
   .sticky-scale-item {
-    flex: 1;
-    max-width: 80px;
-    text-align: center;
-    padding: 6px 2px;
-    border-right: 1px solid #f0f0f0;
-    font-size: 11px;
-    color: #666;
-    line-height: 1.3;
+    flex: 1; max-width: 80px; text-align: center; padding: 6px 2px;
+    border-right: 1px solid #f0f0f0; font-size: 11px; color: #666; line-height: 1.3;
   }
   .sticky-scale-item:last-child { border-right: none; }
-  .sticky-scale-item .snum {
-    display: block;
-    font-size: 15px;
-    font-weight: 700;
-    color: #3a5a8c;
+  .sticky-scale-item .snum { display: block; font-size: 15px; font-weight: 700; color: #3a5a8c; }
+
+  /* ══ PAYMENT MODAL ══ */
+  .pay-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.55);
+    align-items: center; justify-content: center;
+  }
+  .pay-overlay.show { display: flex; }
+  .pay-modal {
+    background: #fff; border-radius: 20px; padding: 36px 28px;
+    max-width: 360px; width: 90%; text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .pay-modal .lock-icon { font-size: 48px; margin-bottom: 12px; }
+  .pay-modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #1a1a1a; }
+  .pay-modal p  { font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 24px; }
+  .pay-price {
+    background: #f0f5ff; border-radius: 12px; padding: 14px;
+    margin-bottom: 20px;
+  }
+  .pay-price .amount { font-size: 32px; font-weight: 800; color: #3a5a8c; }
+  .pay-price .sub    { font-size: 12px; color: #888; margin-top: 2px; }
+  .stripe-btn {
+    display: block; width: 100%; padding: 16px;
+    background: linear-gradient(135deg, #635bff, #8b85ff);
+    color: white; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    text-decoration: none; transition: opacity 0.2s;
+    margin-bottom: 10px;
+  }
+  .stripe-btn:hover { opacity: 0.9; }
+  .pay-cancel {
+    background: none; border: none; color: #aaa;
+    font-size: 13px; cursor: pointer; padding: 6px;
+  }
+  .pay-cancel:hover { color: #666; }
+  .pay-badge {
+    margin-top: 16px; font-size: 11px; color: #bbb;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
   }
 
-  .progress-bar {
-    height: 4px;
-    background: #e0e0e0;
-    position: sticky;
-    top: 92px;
-    z-index: 99;
+  /* ══ LOCKED RESULTS PLACEHOLDER ══ */
+  .locked-results {
+    padding: 40px 24px; text-align: center;
   }
-  .progress-fill {
-    height: 100%;
-    background: #5a9bd5;
-    transition: width 0.3s;
-  }
-  .answered-count {
-    text-align: center;
-    font-size: 12px;
-    color: #888;
-    padding: 6px;
-  }
+  .locked-results .lock { font-size: 56px; margin-bottom: 16px; }
+  .locked-results h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .locked-results p { font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 24px; }
 
   @media (max-width: 600px) {
-    /* Header */
     .header { padding: 24px 16px 20px; }
     .header h1 { font-size: 20px; }
-
-    /* Tabs */
     .tab-btn { font-size: 11px; padding: 12px 4px; }
-
-    /* Behavior pairs — stack vertically on mobile */
-    .behavior-pair-row {
-      grid-template-columns: 1fr;
-      gap: 4px;
-    }
+    .behavior-pair-row { grid-template-columns: 1fr; gap: 4px; }
     .vs-badge { display: none; }
-    .behavior-item.weak-item {
-      flex-direction: row;
-      text-align: left;
-    }
+    .behavior-item.weak-item { flex-direction: row; text-align: left; }
     .behavior-item.weak-item .check-box { order: -1; }
-
-    /* Add a subtle divider line between pair items */
-    .behavior-pair-row { 
-      border-bottom: 1px dashed #eee;
-      padding-bottom: 6px;
-      margin-bottom: 6px;
-    }
+    .behavior-pair-row { border-bottom: 1px dashed #eee; padding-bottom: 6px; margin-bottom: 6px; }
     .behavior-pair-row:last-child { border-bottom: none; }
-
-    /* Questionnaire */
     .q-item { flex-direction: column; align-items: flex-start; gap: 10px; }
     .rating-wrap { width: 100%; align-items: flex-start; }
     .rating-hint { display: none; }
     .rating-group { gap: 4px; }
     .rating-btn { width: 36px; height: 36px; font-size: 14px; }
-
-    /* Scale legend — 2 columns on mobile */
     .scale-legend { grid-template-columns: repeat(2, 1fr); }
-
-    /* Result card — stack on mobile */
     .result-card-top { grid-template-columns: 1fr; }
     .result-divider { width: 100%; height: 1px; }
     .weak-section { border-top: 1px solid #eee; }
-
-    /* Score strip — smaller */
     .score-chip { font-size: 11px; padding: 3px 8px; }
-
-    /* Skill block margin */
     .skill-block { margin: 8px 10px; }
     .behavior-pairs { padding: 8px 10px 10px; }
-
-    /* Submit button */
     .submit-btn { font-size: 14px; padding: 14px; }
   }
 </style>
 </head>
 <body>
+
+<!-- ══ PAYMENT MODAL ══ -->
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-modal">
+    <div class="lock-icon">🔒</div>
+    <h2>解锁完整结果分析</h2>
+    <p>你的12项执行技能评估已完成！<br>支付后立即查看你的<strong>强项与弱项分析报告</strong>。</p>
+    <div class="pay-price">
+      <div class="amount">¥9.9</div>
+      <div class="sub">一次性解锁 · 支持信用卡 / 微信 / 支付宝</div>
+    </div>
+    <a id="stripeBtn" class="stripe-btn" href="#" target="_blank" onclick="handleStripeClick()">
+      💳 立即支付 ¥9.9
+    </a>
+    <button class="pay-cancel" onclick="closePayModal()">暂时不了</button>
+    <div class="pay-badge">🔐 由 Stripe 提供安全支付</div>
+  </div>
+</div>
 
 <div class="header">
   <h1>执行技能评估</h1>
@@ -451,13 +312,9 @@
   <button class="tab-btn" onclick="switchTab('results')">📊 结果分析</button>
 </div>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- TAB 1: BEHAVIOR CHECKLIST                  -->
-<!-- ══════════════════════════════════════════ -->
+<!-- TAB 1 -->
 <div id="tab-checklist" class="tab-content active">
-  <div class="checklist-intro">
-    每个技能请选择一项最符合你的描述（强或弱），12项全部选完后才能进入评分问卷。
-  </div>
+  <div class="checklist-intro">每个技能请选择一项最符合你的描述（强或弱），12项全部选完后才能进入评分问卷。</div>
   <div class="checklist-progress">
     <span id="cl-count">已完成 0 / 12</span>
     <div class="cl-prog-bar"><div class="cl-prog-fill" id="cl-prog-fill" style="width:0%"></div></div>
@@ -465,323 +322,140 @@
 
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>反应抑制</h3>
-        <p>先思考后行动的能力——经过大脑思考后再说话或做事，有时间评估情况，并想想行为可能造成什么后果。</p>
-      </div>
+      <div class="skill-header-text"><h3>反应抑制</h3><p>先思考后行动的能力——经过大脑思考后再说话或做事，有时间评估情况，并想想行为可能造成什么后果。</p></div>
       <span class="skill-status todo" id="badge-反应抑制">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>三思而后言</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>说话不经大脑</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"不慌，先观望一下"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我现在就要"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>决策时仔细斟酌</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>做出冲动的决定</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>三思而后言</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>说话不经大脑</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"不慌，先观望一下"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我现在就要"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>决策时仔细斟酌</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>做出冲动的决定</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>工作记忆</h3>
-        <p>执行复杂任务时将信息保存在记忆中的能力，包括总结过去的经验教训用于应对现状或预测未来。</p>
-      </div>
+      <div class="skill-header-text"><h3>工作记忆</h3><p>执行复杂任务时将信息保存在记忆中的能力，包括总结过去的经验教训用于应对现状或预测未来。</p></div>
       <span class="skill-status todo" id="badge-工作记忆">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>东西放哪里心中有数</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>东西到处乱放</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>记得应该做什么</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我到底在干什么？"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>总结过去的经验教训</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>重蹈覆辙</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>东西放哪里心中有数</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>东西到处乱放</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>记得应该做什么</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我到底在干什么？"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>总结过去的经验教训</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>重蹈覆辙</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>情绪控制</h3>
-        <p>管理情绪以达成目标、完成任务或控制和引导行为的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>情绪控制</h3><p>管理情绪以达成目标、完成任务或控制和引导行为的能力。</p></div>
       <span class="skill-status todo" id="badge-情绪控制">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>保持冷静</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>脾气暴躁</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>听取批评／有错就改</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>很容易受伤／受刺激</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>受挫时能控制脾气</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>受挫时容易失控</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>保持冷静</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>脾气暴躁</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>听取批评／有错就改</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>很容易受伤／受刺激</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>受挫时能控制脾气</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>受挫时容易失控</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>启动任务</h3>
-        <p>在不过分拖延的前提下，高效且及时地启动任务的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>启动任务</h3><p>在不过分拖延的前提下，高效且及时地启动任务的能力。</p></div>
       <span class="skill-status todo" id="badge-启动任务">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>马上动手</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>拖拖拉拉</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"想做就做"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"还有大把的时间呢"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我已经做完了"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我保证一定会去做"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>马上动手</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>拖拖拉拉</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"想做就做"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"还有大把的时间呢"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我已经做完了"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我保证一定会去做"</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>持续注意力</h3>
-        <p>在注意力涣散、疲劳或无聊的情况下，仍能对某一情境或任务保持专注的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>持续注意力</h3><p>在注意力涣散、疲劳或无聊的情况下，仍能对某一情境或任务保持专注的能力。</p></div>
       <span class="skill-status todo" id="badge-持续注意力">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>能完成任务</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>静不下心</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>能坚持工作</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"太无聊了"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>专心致志</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>容易分心</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>能完成任务</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>静不下心</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>能坚持工作</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"太无聊了"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>专心致志</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>容易分心</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>按优先次序制订计划</h3>
-        <p>为达成目标或完成任务制订相应计划与方向，还包括根据任务的重要程度确定其优先次序的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>按优先次序制订计划</h3><p>为达成目标或完成任务制订相应计划与方向，还包括根据任务的重要程度确定其优先次序的能力。</p></div>
       <span class="skill-status todo" id="badge-按优先次序制订计划">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>可以看到通往目标的路径</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>不知道该如何达成目标</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"先做这个"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"先做这个，不，也许应该先做那个？"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"这个可以先忽略掉"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"这个重要吗？"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>可以看到通往目标的路径</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>不知道该如何达成目标</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"先做这个"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"先做这个，不，也许应该先做那个？"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"这个可以先忽略掉"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"这个重要吗？"</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>规整</h3>
-        <p>为跟踪信息或物品情况，创建相应体系并加以维护的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>规整</h3><p>为跟踪信息或物品情况，创建相应体系并加以维护的能力。</p></div>
       <span class="skill-status todo" id="badge-规整">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>干净整洁</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>东西到处都是</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>井井有条</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>随手乱放</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"它就在这里"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我不知道它在哪里"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>干净整洁</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>东西到处都是</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>井井有条</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>随手乱放</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"它就在这里"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我不知道它在哪里"</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>时间管理</h3>
-        <p>估算自己有多少时间、如何分配时间、如何在规定时间内完成任务的能力，还涉及对时间的紧迫感。</p>
-      </div>
+      <div class="skill-header-text"><h3>时间管理</h3><p>估算自己有多少时间、如何分配时间、如何在规定时间内完成任务的能力，还涉及对时间的紧迫感。</p></div>
       <span class="skill-status todo" id="badge-时间管理">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"这个要十分钟"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"这个永远都做不完"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我得去工作了"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"再玩一局就去工作"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"今天得交差了"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"还有一天呢，不急"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"这个要十分钟"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"这个永远都做不完"</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我得去工作了"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"再玩一局就去工作"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"今天得交差了"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"还有一天呢，不急"</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>将目标贯彻到底</h3>
-        <p>找准目标、不达目标不罢休，且不会被其他相互冲突的利益所拖延或分散注意力的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>将目标贯彻到底</h3><p>找准目标、不达目标不罢休，且不会被其他相互冲突的利益所拖延或分散注意力的能力。</p></div>
       <span class="skill-status todo" id="badge-将目标贯彻到底">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"天塌下来也要先把工作做完"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"这个工作量太大了"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"要有耐心"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我现在就要"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我可以咬牙挺过去"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我永远都熬不过去"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"天塌下来也要先把工作做完"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"这个工作量太大了"</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"要有耐心"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我现在就要"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我可以咬牙挺过去"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我永远都熬不过去"</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>灵活性</h3>
-        <p>面对障碍、挫折、意外或失误时相应调整计划的能力，关系到应对变化、迅速适应的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>灵活性</h3><p>面对障碍、挫折、意外或失误时相应调整计划的能力，关系到应对变化、迅速适应的能力。</p></div>
       <span class="skill-status todo" id="badge-灵活性">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>随机应变</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>死守原计划</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"也许还有别的办法"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"只有一个办法"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>急中生智</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>死心眼</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>随机应变</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>死守原计划</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"也许还有别的办法"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"只有一个办法"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>急中生智</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>死心眼</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>元认知</h3>
-        <p>后退一步纵观全局、反思自己所作所为的能力，包括自我监控和自我评价的技能。</p>
-      </div>
+      <div class="skill-header-text"><h3>元认知</h3><p>后退一步纵观全局、反思自己所作所为的能力，包括自我监控和自我评价的技能。</p></div>
       <span class="skill-status todo" id="badge-元认知">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我做得还不错"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我真的行吗？"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我给自己打一个'良'"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我做得到底怎样？"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"这个与那个有关系"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我看不出两者之间有什么关系"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我做得还不错"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我真的行吗？"</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我给自己打一个'良'"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我做得到底怎样？"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"这个与那个有关系"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我看不出两者之间有什么关系"</div></div>
     </div>
   </div>
   <div class="skill-block">
     <div class="skill-header">
-      <div class="skill-header-text">
-        <h3>承受压力</h3>
-        <p>面对不确定性、变化和苛刻的绩效要求不仅泰然处之，而且越挫越勇的能力。</p>
-      </div>
+      <div class="skill-header-text"><h3>承受压力</h3><p>面对不确定性、变化和苛刻的绩效要求不仅泰然处之，而且越挫越勇的能力。</p></div>
       <span class="skill-status todo" id="badge-承受压力">未选</span>
     </div>
     <div class="behavior-pairs">
-    <div class="behavior-pair-row" data-pair="0">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>从容应对</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>不堪重负</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="1">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我做得来"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我做不来"</div>
-    </div>
-    <div class="behavior-pair-row" data-pair="2">
-      <div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我愿冒险一试"</div>
-      <span class="vs-badge">VS</span>
-      <div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我必须有十足的把握才能做"</div>
-    </div>
+      <div class="behavior-pair-row" data-pair="0"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>从容应对</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>不堪重负</div></div>
+      <div class="behavior-pair-row" data-pair="1"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我做得来"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我做不来"</div></div>
+      <div class="behavior-pair-row" data-pair="2"><div class="behavior-item strong-item" data-type="strong"><span class="check-box"></span>"我愿冒险一试"</div><span class="vs-badge">VS</span><div class="behavior-item weak-item" data-type="weak"><span class="check-box"></span>"我必须有十足的把握才能做"</div></div>
     </div>
   </div>
-
-    <button class="submit-btn" onclick="goToQuestionnaire()">继续完成评分问卷 →</button>
+  <button class="submit-btn" onclick="goToQuestionnaire()">继续完成评分问卷 →</button>
 </div>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- TAB 2: QUESTIONNAIRE                        -->
-<!-- ══════════════════════════════════════════ -->
+<!-- TAB 2 -->
 <div id="tab-questionnaire" class="tab-content">
   <div class="q-intro">
     <p>请阅读以下每一项，根据你的认同程度评分（1–6分）。每个部分的三题分数相加即为该技能得分。</p>
@@ -794,43 +468,47 @@
       <div class="scale-item"><span class="num">6</span>强烈同意</div>
     </div>
   </div>
-
   <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   <div class="answered-count" id="answeredCount">已回答 0 / 36 题</div>
-
   <div id="questionnaire-form"></div>
-
   <button class="submit-btn" onclick="calcResults()">查看结果分析 →</button>
 </div>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- TAB 3: RESULTS                              -->
-<!-- ══════════════════════════════════════════ -->
+<!-- TAB 3 -->
 <div id="tab-results" class="tab-content">
-
-  <!-- Score summary strip -->
-  <div class="score-strip" id="scoreStrip"></div>
-
-  <!-- Main result card -->
-  <div class="result-card" id="resultCard">
-    <div class="result-card-top">
-      <div class="result-section strong-section">
-        <div class="result-section-label">💙 执行技能强项</div>
-        <div class="result-skills" id="strongSkills"></div>
-      </div>
-      <div class="result-divider"></div>
-      <div class="result-section weak-section">
-        <div class="result-section-label">💛 需要关注</div>
-        <div class="result-skills" id="weakSkills"></div>
-      </div>
-    </div>
-    <div class="result-card-note" id="resultNote"></div>
+  <div id="results-locked" class="locked-results">
+    <div class="lock">🔒</div>
+    <h3>结果分析待解锁</h3>
+    <p>完成问卷后支付 ¥9.9<br>即可查看你的执行技能完整报告</p>
+    <button class="submit-btn" style="width:auto;display:inline-block;padding:14px 32px;" onclick="showPayModal()">解锁结果分析</button>
   </div>
-
-  <button class="submit-btn" id="retakeBtn" onclick="retake()" style="background:linear-gradient(135deg,#666,#888);margin-top:8px;">重新作答</button>
+  <div id="results-content" style="display:none;">
+    <div class="score-strip" id="scoreStrip"></div>
+    <div class="result-card" id="resultCard">
+      <div class="result-card-top">
+        <div class="result-section strong-section">
+          <div class="result-section-label">💙 执行技能强项</div>
+          <div class="result-skills" id="strongSkills"></div>
+        </div>
+        <div class="result-divider"></div>
+        <div class="result-section weak-section">
+          <div class="result-section-label">💛 需要关注</div>
+          <div class="result-skills" id="weakSkills"></div>
+        </div>
+      </div>
+      <div class="result-card-note" id="resultNote"></div>
+    </div>
+    <button class="submit-btn" onclick="retake()" style="background:linear-gradient(135deg,#666,#888);margin-top:8px;">重新作答</button>
+  </div>
 </div>
 
 <script>
+// ══ 配置 ══════════════════════════════════════
+// 1. 在 Stripe 后台创建 Payment Link，将链接填在这里
+// 2. Payment Link 的成功跳转 URL 设置为：https://executive-skills-quiz.vercel.app/?paid=true
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/YOUR_PAYMENT_LINK_HERE';
+// ═════════════════════════════════════════════
+
 const SKILLS = [
   { name: "反应抑制",       qs: ["我不会妄下结论。","我说话前会过脑子。","采取行动之前，我会确保自己已掌握全部事实。"] },
   { name: "工作记忆",       qs: ["我对事实、日期和细节总是记得很清楚。","答应过的事我绝不会忘记。","我记得自己要完成的任务，很少需要被提醒。"] },
@@ -848,18 +526,61 @@ const SKILLS = [
 
 const answers = {};
 let qCounter = 1;
+let isPaid = false;
 
+// ── 检查付款状态 ──────────────────────────────
+function checkPaymentStatus() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('paid') === 'true') {
+    isPaid = true;
+    // 清除 URL 参数（保持美观）
+    window.history.replaceState({}, '', window.location.pathname);
+    // 恢复答题数据并显示结果
+    const saved = sessionStorage.getItem('quiz_answers');
+    if (saved) {
+      Object.assign(answers, JSON.parse(saved));
+      restoreAnswerUI();
+      renderResults();
+      switchTab('results');
+    }
+  }
+}
+
+function restoreAnswerUI() {
+  Object.keys(answers).forEach(gid => {
+    const val = answers[gid];
+    document.querySelectorAll(`[data-gid="${gid}"]`).forEach(btn => {
+      btn.classList.toggle('selected', parseInt(btn.dataset.val) === val);
+    });
+    updateSectionScore(gid);
+  });
+  updateProgress();
+}
+
+// ── 付款弹窗 ──────────────────────────────────
+function showPayModal() {
+  document.getElementById('payOverlay').classList.add('show');
+}
+
+function closePayModal() {
+  document.getElementById('payOverlay').classList.remove('show');
+}
+
+function handleStripeClick() {
+  // 保存答题数据，付款后跳回恢复
+  sessionStorage.setItem('quiz_answers', JSON.stringify(answers));
+  const link = STRIPE_PAYMENT_LINK + '?success_url=' + encodeURIComponent(window.location.origin + window.location.pathname + '?paid=true');
+  document.getElementById('stripeBtn').href = link;
+}
+
+// ── 问卷构建 ──────────────────────────────────
 function buildQuestionnaire() {
   const form = document.getElementById('questionnaire-form');
   form.innerHTML = '';
   SKILLS.forEach((skill, si) => {
     const sec = document.createElement('div');
     sec.className = 'q-section';
-    sec.innerHTML = `
-      <div class="q-section-header">
-        <h3>${skill.name}</h3>
-        <span class="section-score-badge" id="sec-score-${si}">0 分</span>
-      </div>`;
+    sec.innerHTML = `<div class="q-section-header"><h3>${skill.name}</h3><span class="section-score-badge" id="sec-score-${si}">0 分</span></div>`;
     skill.qs.forEach((q, qi) => {
       const gid = `q_${si}_${qi}`;
       const item = document.createElement('div');
@@ -890,9 +611,7 @@ function rate(gid, val) {
 function updateSectionScore(gid) {
   const si = parseInt(gid.split('_')[1]);
   let total = 0;
-  for (let qi = 0; qi < 3; qi++) {
-    total += (answers[`q_${si}_${qi}`] || 0);
-  }
+  for (let qi = 0; qi < 3; qi++) total += (answers[`q_${si}_${qi}`] || 0);
   document.getElementById(`sec-score-${si}`).textContent = total + ' 分';
 }
 
@@ -902,7 +621,18 @@ function updateProgress() {
   document.getElementById('answeredCount').textContent = `已回答 ${answered} / 36 题`;
 }
 
+// ── 计算结果（带付款检查）────────────────────
 function calcResults() {
+  if (!isPaid) {
+    sessionStorage.setItem('quiz_answers', JSON.stringify(answers));
+    showPayModal();
+    return;
+  }
+  renderResults();
+  switchTab('results');
+}
+
+function renderResults() {
   const scores = SKILLS.map((skill, si) => {
     let total = 0;
     for (let qi = 0; qi < 3; qi++) total += (answers[`q_${si}_${qi}`] || 0);
@@ -912,35 +642,26 @@ function calcResults() {
   const top3 = sorted.slice(0, 3);
   const bot3 = sorted.slice(-3).reverse();
 
-  // Score chips strip
   document.getElementById('scoreStrip').innerHTML =
     scores.map(s => `<div class="score-chip">${s.name}<span class="chip-num">${s.score}</span></div>`).join('');
-
-  // Strong skills
   document.getElementById('strongSkills').innerHTML =
-    top3.map(s => `<div class="skill-card-item">
-      <div class="skill-card-name">${s.name}</div>
-      <div class="skill-card-score">${s.score} / 18 分</div>
-    </div>`).join('');
-
-  // Weak skills
+    top3.map(s => `<div class="skill-card-item"><div class="skill-card-name">${s.name}</div><div class="skill-card-score">${s.score} / 18 分</div></div>`).join('');
   document.getElementById('weakSkills').innerHTML =
-    bot3.map(s => `<div class="skill-card-item">
-      <div class="skill-card-name">${s.name}</div>
-      <div class="skill-card-score">${s.score} / 18 分</div>
-    </div>`).join('');
+    bot3.map(s => `<div class="skill-card-item"><div class="skill-card-name">${s.name}</div><div class="skill-card-score">${s.score} / 18 分</div></div>`).join('');
+  document.getElementById('resultNote').textContent = '每项满分 18 分 · 强弱项无好坏之分，了解自己才能更好地规划';
 
-  // Note line
-  document.getElementById('resultNote').textContent =
-    '每项满分 18 分 · 强弱项无好坏之分，了解自己才能更好地规划';
-
-  switchTab('results');
+  document.getElementById('results-locked').style.display = 'none';
+  document.getElementById('results-content').style.display = 'block';
 }
 
 function retake() {
+  isPaid = false;
   Object.keys(answers).forEach(k => delete answers[k]);
+  sessionStorage.removeItem('quiz_answers');
   qCounter = 1;
   buildQuestionnaire();
+  document.getElementById('results-locked').style.display = 'block';
+  document.getElementById('results-content').style.display = 'none';
   switchTab('questionnaire');
 }
 
@@ -962,8 +683,7 @@ function updateChecklistProgress() {
     const badge = block.querySelector('.skill-status');
     if (allRowsDone) {
       done++;
-      block.classList.add('answered');
-      block.classList.remove('unanswered');
+      block.classList.add('answered'); block.classList.remove('unanswered');
       if (badge) { badge.textContent = '✓ 已选'; badge.className = 'skill-status done'; }
     } else {
       block.classList.remove('answered');
@@ -978,10 +698,8 @@ function goToQuestionnaire() {
   const blocks = document.querySelectorAll('.skill-block');
   let allDone = true;
   blocks.forEach(block => {
-    const selected = block.querySelector('.behavior-item.checked-strong, .behavior-item.checked-weak');
-    if (!selected) {
-      block.classList.add('unanswered');
-      allDone = false;
+    if (!block.querySelector('.behavior-item.checked-strong, .behavior-item.checked-weak')) {
+      block.classList.add('unanswered'); allDone = false;
     }
   });
   if (!allDone) {
@@ -992,25 +710,27 @@ function goToQuestionnaire() {
   switchTab('questionnaire');
 }
 
-// Wire behavior-item clicks — paired row selection (strong vs weak per row)
 document.querySelectorAll('.behavior-pair-row').forEach(row => {
   const items = row.querySelectorAll('.behavior-item');
   items.forEach(item => {
     const type = item.dataset.type;
     const cls = 'checked-' + type;
-    const otherCls = type === 'strong' ? 'checked-weak' : 'checked-strong';
     item.addEventListener('click', function() {
       const already = this.classList.contains(cls);
-      // Clear both in this row
       items.forEach(i => i.classList.remove('checked-strong', 'checked-weak'));
-      // Select this one if not already
       if (!already) this.classList.add(cls);
       updateChecklistProgress();
     });
   });
 });
 
+// 点击遮罩关闭弹窗
+document.getElementById('payOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePayModal();
+});
+
 buildQuestionnaire();
+checkPaymentStatus(); // 页面加载时检查付款状态
 </script>
 </body>
 </html>
