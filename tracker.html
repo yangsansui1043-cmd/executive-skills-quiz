@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>执行力跃迁追踪工具</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222536;
+    --border: #2e3250;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --accent4: #f9c74f;
+    --text: #e8eaf0;
+    --text2: #9aa0c0;
+    --text3: #5a607a;
+    --danger: #ff6b6b;
+    --success: #43e97b;
+    --warn: #f9c74f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* Layout */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 18px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .date-display { color: var(--text2); font-size: 13px; }
+  .streak-badge { background: linear-gradient(135deg, #f9c74f, #f4a261); color: #000; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+  .nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; }
+  .nav-btn { padding: 12px 20px; background: none; border: none; color: var(--text2); cursor: pointer; font-size: 13px; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-btn:hover { color: var(--text); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Cards */
+  .grid-12 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .skill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .skill-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); opacity: 0; transition: opacity 0.2s; }
+  .skill-card:hover::before { opacity: 1; }
+  .skill-card.selected::before { opacity: 1; }
+  .skill-num { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .skill-name { font-size: 15px; font-weight: 700; margin: 4px 0 2px; }
+  .skill-sub { font-size: 12px; color: var(--text2); margin-bottom: 10px; }
+  .skill-score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .stars { display: flex; gap: 3px; }
+  .star { font-size: 16px; cursor: pointer; transition: transform 0.1s; }
+  .star:hover { transform: scale(1.2); }
+  .score-label { font-size: 11px; color: var(--text3); }
+  .phase-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .phase-0 { background: #2e3250; color: var(--text3); }
+  .phase-1 { background: rgba(108,99,255,0.2); color: var(--accent); }
+  .phase-2 { background: rgba(67,233,123,0.2); color: var(--accent3); }
+  .phase-3 { background: rgba(249,199,79,0.2); color: var(--accent4); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.4s; }
+
+  /* Skill Detail */
+  .skill-detail { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .skill-detail-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .skill-detail-title h2 { font-size: 22px; font-weight: 700; }
+  .skill-detail-title p { color: var(--text2); margin-top: 4px; font-size: 14px; }
+  .tabs-inner { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-inner { padding: 6px 14px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+  .tab-inner.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .practice-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .practice-item h4 { font-size: 13px; color: var(--accent); margin-bottom: 6px; }
+  .practice-item p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  .timeline-phases { display: flex; gap: 12px; flex-wrap: wrap; }
+  .timeline-phase { flex: 1; min-width: 180px; background: var(--surface2); border-radius: 10px; padding: 14px; border-left: 3px solid var(--border); }
+  .timeline-phase.p1 { border-left-color: #6c63ff; }
+  .timeline-phase.p2 { border-left-color: #f9c74f; }
+  .timeline-phase.p3 { border-left-color: #43e97b; }
+  .timeline-phase h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-phase p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  .research-box { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); border-radius: 10px; padding: 14px; margin-top: 12px; }
+  .research-box h4 { font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+  .research-box ul { padding-left: 16px; }
+  .research-box li { font-size: 13px; color: var(--text2); margin-bottom: 6px; line-height: 1.6; }
+  .research-box .method-tag { display: inline-block; background: rgba(108,99,255,0.2); color: var(--accent); padding: 2px 8px; border-radius: 6px; font-size: 11px; margin-top: 4px; font-weight: 600; }
+
+  /* Daily Log */
+  .log-form { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .log-form h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-row textarea, .form-row input, .form-row select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); padding: 10px 12px; font-size: 14px; font-family: inherit; resize: vertical;
+    transition: border-color 0.2s;
+  }
+  .form-row textarea:focus, .form-row input:focus, .form-row select:focus { outline: none; border-color: var(--accent); }
+  .form-row textarea { min-height: 80px; }
+  .form-row select option { background: var(--surface2); }
+  .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #7c74ff; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(255,107,107,0.15); color: var(--danger); border: 1px solid rgba(255,107,107,0.3); }
+
+  /* Log Entries */
+  .log-entry { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .log-entry-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .log-entry-date { font-size: 12px; color: var(--text3); }
+  .log-entry-skill { font-size: 12px; background: rgba(108,99,255,0.2); color: var(--accent); padding: 2px 8px; border-radius: 6px; }
+  .log-entry-body { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .log-entry-body strong { color: var(--text); }
+  .rating-display { display: flex; gap: 4px; margin-top: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .dot.filled { background: var(--accent4); }
+
+  /* Weekly Review */
+  .weekly-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .summary-card .num { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .summary-card .label { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .stat-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .stat-bar-label { font-size: 12px; color: var(--text2); width: 90px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .stat-bar-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 4px; }
+  .stat-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .stat-bar-val { font-size: 11px; color: var(--text3); width: 20px; text-align: right; }
+
+  /* Misc */
+  .section-title { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .empty-state { text-align: center; padding: 40px; color: var(--text3); font-size: 14px; }
+  .empty-state .icon { font-size: 32px; margin-bottom: 8px; }
+  .flex-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .chip { padding: 4px 10px; border-radius: 20px; font-size: 12px; background: var(--surface2); border: 1px solid var(--border); color: var(--text2); cursor: pointer; transition: all 0.2s; }
+  .chip.active { background: rgba(108,99,255,0.2); border-color: var(--accent); color: var(--accent); }
+  .alert { background: rgba(249,199,79,0.1); border: 1px solid rgba(249,199,79,0.3); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--warn); margin-bottom: 16px; }
+  .tooltip { position: relative; }
+  .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 10; color: var(--text); }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .score-big { font-size: 32px; font-weight: 700; }
+  .medal { font-size: 18px; }
+  select { color: var(--text) !important; }
+
+  /* Quiz import banner */
+  .import-banner { background: linear-gradient(135deg,rgba(108,99,255,.15),rgba(255,101,132,.1)); border:1px solid var(--accent); border-radius:12px; padding:14px 18px; margin:12px 16px 0; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .import-banner h3 { font-size:14px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .import-banner p { font-size:12px; color:var(--text2); }
+  .import-banner-btns { display:flex; gap:8px; flex-shrink:0; }
+
+  /* Modal */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:300; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .modal-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; max-width:460px; width:100%; }
+  .modal-box h3 { font-size:17px; font-weight:700; margin-bottom:8px; }
+  .modal-box p { font-size:13px; color:var(--text2); margin-bottom:14px; line-height:1.6; }
+
+  /* Retake prompt */
+  .retake-card { background:rgba(249,199,79,.08); border:1px solid rgba(249,199,79,.3); border-radius:12px; padding:14px 18px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .retake-card p { font-size:13px; color:var(--warn); }
+</style>
+</head>
+<body>
+
+<!-- Quiz import modal -->
+<div class="modal-overlay" id="importModal" style="display:none;">
+  <div class="modal-box">
+    <h3>📋 手动导入测试结果</h3>
+    <p>请按顺序输入 12 项技能的得分（每项 3–18 分，用英文逗号分隔）：<br>
+    <span style="font-size:11px;color:var(--text3);">顺序：反应抑制, 工作记忆, 情绪控制, 启动任务, 持续注意力, 计划优先级, 组织条理, 时间管理, 目标坚持, 灵活变通, 元认知, 压力承受</span></p>
+    <div class="form-row">
+      <textarea id="manualImportInput" placeholder="例：12,8,15,10,6,14,9,16,11,13,7,18" style="min-height:60px;"></textarea>
+    </div>
+    <div class="flex-row">
+      <button class="btn btn-primary" onclick="doManualImport()">导入</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('importModal').style.display='none'">取消</button>
+    </div>
+    <div id="importModalMsg" style="margin-top:8px;font-size:12px;color:var(--accent3);"></div>
+  </div>
+</div>
+
+<div class="header">
+  <h1>⚡ 执行力跃迁追踪</h1>
+  <div class="header-right">
+    <div class="date-display" id="dateDisplay"></div>
+    <div class="streak-badge" id="streakBadge">🔥 连续 0 天</div>
+  </div>
+</div>
+
+<!-- Quiz import banner (shown when quiz data detected) -->
+<div id="quizImportBanner" class="import-banner" style="display:none;">
+  <div>
+    <h3>🎉 检测到你的测试结果</h3>
+    <p id="quizImportDesc">来自 executive-skills-quiz.vercel.app 的数据已就绪</p>
+  </div>
+  <div class="import-banner-btns">
+    <button class="btn btn-primary" onclick="applyQuizImport()">一键导入评分</button>
+    <button class="btn btn-secondary" onclick="dismissImportBanner()">忽略</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">📊 总览</button>
+  <button class="nav-btn" onclick="showSection('skills')">🧠 技能练习</button>
+  <button class="nav-btn" onclick="showSection('daily')">📝 每日记录</button>
+  <button class="nav-btn" onclick="showSection('weekly')">📅 每周复盘</button>
+  <button class="nav-btn" onclick="showSection('stats')">📈 数据统计</button>
+</nav>
+
+<!-- SECTION: 总览 -->
+<div id="section-overview" class="section active">
+<div class="container">
+  <div class="section-title">12 项执行技能 · 自评仪表盘</div>
+  <div style="margin-bottom:16px;color:var(--text2);font-size:13px;">点击星星给自己评分（1-5），点击卡片查看详情与练习方案。分数会自动保存。</div>
+  <div class="grid-12" id="overviewGrid"></div>
+
+  <div class="divider"></div>
+  <div class="section-title">本季度重点技能</div>
+  <div id="focusSkills" style="margin-bottom:24px;"></div>
+
+  <div class="section-title">快速开始今日练习</div>
+  <div class="log-form" style="padding:16px;">
+    <div class="flex-row">
+      <button class="btn btn-primary" onclick="showSection('daily')">✍️ 记录今日练习</button>
+      <button class="btn btn-secondary" onclick="showSection('weekly')">📅 本周复盘</button>
+      <button class="btn btn-secondary" onclick="showSection('skills')">🧠 查看技能详情</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION: 技能练习 -->
+<div id="section-skills" class="section">
+<div class="container">
+  <div class="section-title">选择技能查看详细练习方案</div>
+  <div class="flex-row" style="margin-bottom:20px;" id="skillSelector"></div>
+  <div id="skillDetailArea"></div>
+</div>
+</div>
+
+<!-- SECTION: 每日记录 -->
+<div id="section-daily" class="section">
+<div class="container">
+  <div class="log-form">
+    <h3>📝 今日练习记录</h3>
+    <div class="form-row">
+      <label>练习的技能</label>
+      <select id="logSkill"></select>
+    </div>
+    <div class="form-row">
+      <label>做了什么（具体练习动作）</label>
+      <textarea id="logDid" placeholder="例：用两分钟法则启动了写稿任务，打开文档写了标题，最终完成了初稿…"></textarea>
+    </div>
+    <div class="form-row">
+      <label>有效吗？遇到什么困难？</label>
+      <textarea id="logEffect" placeholder="例：有效，启动比预期容易。但中途被消息打断一次，分心了15分钟…"></textarea>
+    </div>
+    <div class="form-row">
+      <label>明天改进什么（一个可执行动作）</label>
+      <textarea id="logNext" placeholder="例：明天开工前先把手机静音放进抽屉，减少打断…"></textarea>
+    </div>
+    <div class="form-row">
+      <label>今日自评（今天整体执行状态）</label>
+      <div class="stars" id="logRating">
+        <span class="star" onclick="setLogRating(1)">⭐</span>
+        <span class="star" onclick="setLogRating(2)">⭐</span>
+        <span class="star" onclick="setLogRating(3)">⭐</span>
+        <span class="star" onclick="setLogRating(4)">⭐</span>
+        <span class="star" onclick="setLogRating(5)">⭐</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>🎯 今日冲动/情绪记录（选填）</label>
+      <textarea id="logImpulse" placeholder="例：下午3点想刷手机，成功暂停了3次；看到评论差数据，焦虑值7/10，90秒后恢复…" style="min-height:60px;"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveLog()">保存记录</button>
+    <span style="margin-left:12px;font-size:12px;color:var(--text3);" id="saveMsg"></span>
+  </div>
+
+  <div class="section-title">历史记录</div>
+  <div class="flex-row" style="margin-bottom:12px;" id="logFilterChips"></div>
+  <div id="logList"></div>
+</div>
+</div>
+
+<!-- SECTION: 每周复盘 -->
+<div id="section-weekly" class="section">
+<div class="container">
+  <div class="weekly-summary" id="weeklySummary"></div>
+
+  <div class="log-form">
+    <h3>📅 本周复盘</h3>
+    <div class="form-row">
+      <label>本周第几周（从开始使用本工具算）</label>
+      <input type="number" id="weekNum" min="1" placeholder="例：1">
+    </div>
+    <div class="form-row">
+      <label>本周主攻技能</label>
+      <select id="weekSkill"></select>
+    </div>
+    <div class="form-row">
+      <label>计划完成率（%）</label>
+      <input type="number" id="weekCompletion" min="0" max="100" placeholder="例：75">
+    </div>
+    <div class="form-row">
+      <label>本周做对了什么</label>
+      <textarea id="weekGood" placeholder="例：连续5天完成了最小量打卡；成功暂停冲动8次…"></textarea>
+    </div>
+    <div class="form-row">
+      <label>本周做错了什么（踩了哪个坑）</label>
+      <textarea id="weekBad" placeholder="例：周三断更了，因为等待状态好了才开始…"></textarea>
+    </div>
+    <div class="form-row">
+      <label>下周改进策略（一个具体动作）</label>
+      <textarea id="weekPlan" placeholder="例：下周设'如果想等状态，那么立刻只做2分钟'的预案…"></textarea>
+    </div>
+    <div class="form-row">
+      <label>本周收获的心理表征（对某技能的新理解）</label>
+      <textarea id="weekInsight" placeholder="例：意识到拖延本质是情绪逃避，不是时间问题；建立了'启动链'的脑内预演…"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveWeekly()">保存本周复盘</button>
+    <span style="margin-left:12px;font-size:12px;color:var(--text3);" id="weekSaveMsg"></span>
+  </div>
+
+  <div class="section-title">历次复盘</div>
+  <div id="weeklyList"></div>
+</div>
+</div>
+
+<!-- SECTION: 数据统计 -->
+<div id="section-stats" class="section">
+<div class="container">
+  <div class="section-title">12 项技能得分分布</div>
+  <div id="statsSkillBars" class="log-form" style="padding:20px 20px 10px;"></div>
+
+  <div class="divider"></div>
+  <div class="section-title">练习阶段分布</div>
+  <div class="stats-grid" id="statsPhases"></div>
+
+  <div class="divider"></div>
+  <div class="section-title">练习活跃度（最近30条记录）</div>
+  <div id="statsActivity" class="log-form" style="padding:16px;"></div>
+
+  <div class="divider"></div>
+  <div class="section-title">最常记录的技能 TOP 3</div>
+  <div id="statsTop" class="log-form" style="padding:16px;"></div>
+
+  <div class="divider"></div>
+  <div class="section-title">测试历史 · 进步对比</div>
+  <div id="quizHistoryArea" class="log-form" style="padding:16px;"></div>
+
+  <div class="divider"></div>
+  <div style="text-align:center;padding:20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+    <a href="https://executive-skills-quiz.vercel.app/" target="_blank" class="btn btn-secondary">🔄 重新测试</a>
+    <button class="btn btn-secondary" onclick="document.getElementById('importModal').style.display='flex'">📋 手动导入测试分数</button>
+    <button class="btn btn-danger" onclick="exportData()">📤 导出数据</button>
+    <button class="btn btn-secondary" onclick="importData()">📥 导入数据</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+  </div>
+</div>
+</div>
+
+<script>
+// ========== DATA ==========
+const SKILLS = [
+  {
+    id: 1, code: '01', name: '反应抑制', en: 'Response Inhibition', sub: '三思而后行——抵住冲动的能力',
+    concept: '在行动或开口之前先停一拍、评估后果的能力。强的人是争论里「讲道理的那一方」；弱的人脱口而出、拍脑袋决定，事后后悔。',
+    scenes: ['想专注却忍不住点开短视频', '情绪上头时发出后悔的消息', '刷到带货链接冲动下单', '会议里抢话、打断别人'],
+    stuck: ['靠「忍」来对抗冲动，几次就耗尽', '没有意识到刺激与反应之间有空隙'],
+    solutions: ['在刺激与反应之间插入「暂停键」：冲动来时先做3次深呼吸或数到10', '移除诱因而非对抗诱因：把App退出登录，让冲动行为多几步成本', '用「如果—那么」预案：如果想刷手机，那么先喝口水、写下此刻在做的任务'],
+    practice: [
+      { title: '① 明确目标', desc: '把「无意识冲动反应」训练成「先暂停1秒再选择」。可量化目标：本周记录到的「成功暂停」次数 ≥ 每天5次。' },
+      { title: '② 走出舒适区', desc: '刻意制造小诱惑并练习抵抗：工作时故意把手机放在视线内但不碰，每抵抗一次就在纸上画一笔，难度逐周加码（从25分钟到50分钟）。' },
+      { title: '③ 即时反馈', desc: '用「冲动日记」做反馈：记下每次冲动的触发场景、你的反应、事后评分（1-5）。每周回看，找出最高频的触发点。' },
+      { title: '④ 建心理表征', desc: '在脑中预演「理想的自己遇到冲动时怎么做」，越具体越好（看到通知→深呼吸→继续打字）。反复想象会让真实场景中的反应更自动。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '建立「暂停」意识，每次冲动先数3秒，记冲动日记。' },
+      { label: '进阶 1-3月', desc: '识别2-3个最大触发源，逐一移除或加摩擦；延长专注不碰手机的时长。' },
+      { label: '内化 3-12月', desc: '把「先暂停再选择」内化为默认反应，能在情绪/社交场景中稳定控住第一反应。' }
+    ],
+    research: {
+      points: [
+        '神经科学上，抑制冲动依赖前额叶；它像肌肉，会因疲劳/睡眠不足而变弱——所以「管不住自己」常发生在累的时候，不全是意志问题。[7][8]',
+        '循证方法：用「执行意图(if-then)」把抵抗冲动自动化。94项研究的元分析显示该方法对目标达成有中到大效应(d=.65)。[5]'
+      ],
+      method: '实施意图(Implementation Intentions) + 环境设计（移除诱因）'
+    }
+  },
+  {
+    id: 2, code: '02', name: '工作记忆', en: 'Working Memory', sub: '边做事边在脑中保存关键信息',
+    concept: '在执行复杂任务时，于脑中暂存并调用信息的能力，也包括调取过去经验、对未来做预演。弱的人健忘——忘约会、忘承诺、忘细节。',
+    scenes: ['进了房间忘了要拿什么', '答应别人的事转头就忘', '看完教程操作时又忘了步骤', '脑子里事情太多互相打架'],
+    stuck: ['试图用脑子记住一切，结果什么都记不牢', '信息散落在多个地方，找不到'],
+    solutions: ['外置大脑：所有待办/承诺/灵感，统一进一个「收件箱」，不靠脑记', '用清单与模板把重复流程固化', '复杂步骤可视化：把流程写成checklist贴在眼前'],
+    practice: [
+      { title: '① 明确目标', desc: '训练「即时记录」的肌肉记忆，并扩展短时记忆容量。目标：做到「凡承诺必记录」，一周内零遗漏。' },
+      { title: '② 走出舒适区', desc: '主动做记忆挑战：听播客后复述3个要点；读完一段立刻合上书口述大意；用「记忆宫殿」记购物清单。逐步增加要记的条目数。' },
+      { title: '③ 即时反馈', desc: '反馈来自「漏没漏」：每天结束核对收件箱与实际完成，统计遗漏数；复述后对照原文，看漏了哪几点。' },
+      { title: '④ 建心理表征', desc: '为常用流程建立心理表征（比如「拍一条视频」的完整步骤图谱），让你不必每次重新调取，而是整块提取。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '建立唯一收件箱，养成「立刻记下」的反射。' },
+      { label: '进阶 1-3月', desc: '练习复述/回忆类小游戏，扩展可在脑中同时处理的信息块。' },
+      { label: '内化 3-12月', desc: '常用任务形成稳固的「心理流程图」，工作记忆负担显著下降。' }
+    ],
+    research: {
+      points: [
+        '工作记忆容量有限是人类共性（经典「7±2」），健忘不等于能力差；把信息外置是高手的通用策略，而非偷懒。[1]',
+        '成人ADHD研究显示工作记忆缺陷直接关联「漏事、误期」，外置系统(清单/提醒)能显著补偿。[8]'
+      ],
+      method: 'GTD收集箱 + 第二大脑(Second Brain)笔记法'
+    }
+  },
+  {
+    id: 3, code: '03', name: '情绪控制', en: 'Emotional Control', sub: '管理情绪以服务于目标',
+    concept: '在为目标做事、完成任务或控制行为时管理情绪的能力。强的人在冲突或紧急中仍能冷静；弱的人易被「点燃」，小事就上头。',
+    scenes: ['数据差就崩溃、想删号', '被评论区一句话毁掉一整天', '焦虑到无法开工', '情绪一来就暴饮暴食/摆烂'],
+    stuck: ['把情绪当敌人压制，反而更失控', '在情绪高峰期做决定/做事'],
+    solutions: ['先命名后处理：对自己说出「我现在很沮丧」，命名情绪本身就能降温', '90秒法则：一波情绪的生理高峰约90秒，先不行动，等浪头过去再决定', '把自我攻击改写成对事描述：「我很失败」→「这次开头没抓住人」'],
+    practice: [
+      { title: '① 明确目标', desc: '缩短「从情绪上头到恢复理智」的时间。目标：把崩溃后的恢复从「一整天」练到「一小时内」。' },
+      { title: '② 走出舒适区', desc: '在可控的小挫折中练习：故意发一条可能数据一般的视频，练习面对低数据时的情绪管理；练习被否定后仍按计划完成当天动作。' },
+      { title: '③ 即时反馈', desc: '用「情绪—行为」记录：写下触发事件、情绪强度(1-10)、你的应对、多久恢复。每周看恢复时间是否缩短。' },
+      { title: '④ 建心理表征', desc: '预演「理想反应」：想象自己看到差数据时，平静地说「这是数据不是审判」，并继续下一步。预演越多，真实场景越稳。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '练「命名情绪 + 90秒不行动」。' },
+      { label: '进阶 1-3月', desc: '在真实的小挫折中演练，记录恢复时间。' },
+      { label: '内化 3-12月', desc: '建立稳定的情绪「缓冲带」，挫折不再中断你的执行节奏。' }
+    ],
+    research: {
+      points: [
+        '拖延被证明是一种「情绪调节」而非时间管理问题：面对厌恶的任务，人会用拖延来快速摆脱负面情绪。[6][11]',
+        '提升情绪调节技能（接纳、认知重评、自我关怀）能直接降低拖延，效果优于单纯「逼自己」。[11]',
+        '自责会加重而非减少拖延。[6]'
+      ],
+      method: '自我关怀(Self-compassion) + 认知重评'
+    }
+  },
+  {
+    id: 4, code: '04', name: '持续专注', en: 'Sustained Attention', sub: '在枯燥、疲劳、干扰中坚持完成',
+    concept: '在分心、疲倦或无聊时仍能把注意力维持在任务上的能力。弱的人能开始却难收尾，易被打断、回不来，常在多个任务间乱跳。',
+    scenes: ['写稿五分钟就想摸鱼', '剪辑剪到一半去刷别的', '任务总差最后一步没收尾'],
+    stuck: ['想一口气长时间专注，结果很快崩', '被打断后找不回状态'],
+    solutions: ['番茄工作法：25分钟全神贯注 + 5分钟休息', '把闯入的杂念写进「任务停车场」，而不是立刻去处理', '离开前留「面包屑」，回来照着续上'],
+    practice: [
+      { title: '① 明确目标', desc: '延长「高质量专注时长」。目标：从能专注15分钟，逐步练到能稳定专注45-50分钟。' },
+      { title: '② 走出舒适区', desc: '像练长跑一样练专注：每周把番茄钟时长+5分钟，并刻意挑「无聊但必要」的任务来练。' },
+      { title: '③ 即时反馈', desc: '记录每个番茄钟的「分心次数」和完成度；分心次数下降即进步。' },
+      { title: '④ 建心理表征', desc: '建立「进入状态」的固定仪式（同一首背景音乐/同一句开场白），让大脑一收到信号就切入专注模式。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '用番茄钟建立专注—休息的节律。' },
+      { label: '进阶 1-3月', desc: '逐周延长专注块，专挑枯燥任务练。' },
+      { label: '内化 3-12月', desc: '能按需进入「深度工作」，单次专注稳定在45分钟以上。' }
+    ],
+    research: {
+      points: [
+        '注意力会自然波动；番茄工作法之所以有效，是因为它顺应了「专注-恢复」的节律，而非对抗它。[3]',
+        '执行功能研究指出，分心后「重回任务」的成本很高，减少切换比延长时长更重要。[8]'
+      ],
+      method: '番茄工作法 + 单任务作业 + 物理隔离手机'
+    }
+  },
+  {
+    id: 5, code: '05', name: '任务启动', en: 'Task Initiation', sub: '不拖延地及时开始',
+    concept: '无过度拖延、高效及时地开始任务的能力。弱的人总想「晚点再说」，常因完美主义或任务显得太大而迟迟不动。',
+    scenes: ['明知该拍视频却一直刷手机', '开工前先做一堆无关的「准备」', '选题想很久却迟迟不开拍'],
+    stuck: ['把「开始」想成「要一次做完」，压力巨大', '等灵感/等状态'],
+    solutions: ['两分钟法则：只承诺做两分钟，骗过大脑的启动阻力', '把第一步切到「小到不可能失败」：不是「拍视频」，是「打开相机说一句话」', '用「五秒起身」：想到就5-4-3-2-1起身去做'],
+    practice: [
+      { title: '① 明确目标', desc: '缩短「想到」与「开始」之间的延迟。目标：把启动延迟从「好几个小时/好几天」练到「5分钟内动手」。' },
+      { title: '② 走出舒适区', desc: '刻意练习「即刻启动」：每天给自己一个最讨厌的小任务，练习用两分钟法则立刻开干；逐步挑战更大、更易拖的任务。' },
+      { title: '③ 即时反馈', desc: '记录「今天最该做的事，我拖了多久才开始」，量化启动延迟，每周看是否缩短。' },
+      { title: '④ 建心理表征', desc: '在脑中预演「启动动作链」：看到任务→说「只做两分钟」→坐下→打开文件。预演让启动变成自动反射。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '所有任务都用两分钟法则破冰。' },
+      { label: '进阶 1-3月', desc: '专挑最爱拖的任务练即刻启动，建立「启动仪式」。' },
+      { label: '内化 3-12月', desc: '拖延不再是默认状态，能在5分钟内进入大多数任务。' }
+    ],
+    research: {
+      points: [
+        '约20%-25%成年人有长期拖延，且拖延与执行功能受损显著相关（注意力、计划、时间感知）。[6][9]',
+        '「两分钟法则」和「执行意图」都通过降低启动阻力起效；公开承诺则借助社会问责提升启动率。[3][5]'
+      ],
+      method: '两分钟法则 + 5秒法则 + if-then启动预案'
+    }
+  },
+  {
+    id: 6, code: '06', name: '计划与优先级', en: 'Planning / Prioritizing', sub: '画出通往目标的路线图',
+    concept: '为达成目标制定路线图，并判断什么重要、什么不重要的能力。弱的人面对多步骤任务理不出头绪，容易陷在细枝末节里。',
+    scenes: ['想做账号却不知从哪开始', '选题一堆但排不出先后', '计划写得很细却没法落地'],
+    stuck: ['计划做得太复杂、太理想，反而不敢动', '分不清「重要」和「紧急」'],
+    solutions: ['倒推法：从目标终点倒着列出关键里程碑，再拆成本周/今天的下一步', '每天只定「最重要的三件事(MIT)」，先做最重要那件', '计划留40%缓冲，别排满'],
+    practice: [
+      { title: '① 明确目标', desc: '练成「快速把大目标拆成可执行下一步」的能力。目标：任何项目能在10分钟内拆出本周三个里程碑。' },
+      { title: '② 走出舒适区', desc: '每接到一个目标就强制做一次「拆解练习」：写出终点→里程碑→本周→今天。先从小项目练，逐步挑战更复杂的。' },
+      { title: '③ 即时反馈', desc: '用「计划 vs 实际」复盘：周末对比计划完成率，分析是计划不现实还是执行问题。' },
+      { title: '④ 建心理表征', desc: '积累「项目模板库」（如「拍一期内容」「做一次合集」的标准拆解），让规划从「从零想」变成「套模板+微调」。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '每天练MIT，强迫排序。' },
+      { label: '进阶 1-3月', desc: '对每个项目做倒推拆解，建立模板。' },
+      { label: '内化 3-12月', desc: '规划成为本能，复杂项目也能迅速理出清晰路径。' }
+    ],
+    research: {
+      points: [
+        '计划本身能减少焦虑（把不确定变确定），但「过度计划」会变成新的拖延形式。[1][6]',
+        '「心理对照 + 执行意图(MCII/WOOP)」被多项研究证明能显著提升目标达成。[5]'
+      ],
+      method: 'WOOP(愿望-结果-障碍-计划) + 每日MIT'
+    }
+  },
+  {
+    id: 7, code: '07', name: '组织条理', en: 'Organization', sub: '建立并维护信息与物品的系统',
+    concept: '创建并维护系统来管理信息或物品的能力。弱的人桌面、文件、素材一团乱，永远在找东西。',
+    scenes: ['素材文件乱放，剪辑时找不到', '灵感记在七八个地方', '桌面一乱就不想干活'],
+    stuck: ['想一次性大整理，累一次就放弃', '没有固定规则，全凭当下随手放'],
+    solutions: ['给每样东西一个「家」：固定的命名规则和文件夹结构', '每天5分钟「归位」，而非攒到周末大扫除', '一个灵感入口：所有想法只进一个收集箱'],
+    practice: [
+      { title: '① 明确目标', desc: '建立一套「低维护、能自动运转」的整理系统。目标：找任何素材都能在30秒内定位。' },
+      { title: '② 走出舒适区', desc: '刻意练习「即时归位」：每用完一样东西/存一个文件，立刻按规则归位，把它练成反射。' },
+      { title: '③ 即时反馈', desc: '用「找东西耗时」做反馈：哪类东西老是找不到，就优化哪类的归类规则。' },
+      { title: '④ 建心理表征', desc: '在脑中持有清晰的「系统地图」——知道每类东西该去哪，让归位无需思考。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '搭好素材的文件夹/命名系统。' },
+      { label: '进阶 1-3月', desc: '练「即时归位」反射，每天5分钟维护。' },
+      { label: '内化 3-12月', desc: '系统自动运转，整理不再消耗意志力。' }
+    ],
+    research: {
+      points: [
+        '环境杂乱被研究关联到更高的压力与更低的专注；整洁环境是执行力的「外部脚手架」。[8]',
+        '组织能力可通过「系统化」后天补偿——给每样东西固定位置，把判断变成规则。[1]'
+      ],
+      method: '固定归位规则 + 文件命名规范 + 每日微整理'
+    }
+  },
+  {
+    id: 8, code: '08', name: '时间管理', en: 'Time Management', sub: '估时、分配并守住截止线',
+    concept: '估算可用时间、合理分配并守住期限的能力。弱的人严重低估耗时，总想「再做一件事」，于是处处迟到、处处延误。',
+    scenes: ['以为半小时的事花了两小时', '总在deadline前夜赶工', '一天结束不知时间花哪了'],
+    stuck: ['凭感觉估时，永远偏乐观', '没有给任务设边界，无限延展'],
+    solutions: ['时间记录一周，建立真实耗时基线，之后预估×1.5', '时间块(Time Blocking)：给任务在日历上划定明确时段，到点就停', '用倒计时器给任务「封顶」，制造紧迫感'],
+    practice: [
+      { title: '① 明确目标', desc: '把「时间估算」练准。目标：常见任务的预估误差从±100%收窄到±20%。' },
+      { title: '② 走出舒适区', desc: '做「估时—计时」练习：每个任务开始前先猜耗时，结束后记录实际，对比误差。刻意挑各种类型的任务练。' },
+      { title: '③ 即时反馈', desc: '反馈就是「估 vs 实」的差距表，每周看误差是否在收窄。' },
+      { title: '④ 建心理表征', desc: '积累「个人耗时数据库」（剪一条视频要多久、写一篇文案要多久），让估时基于数据而非感觉。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '全程记录真实耗时，建立基线。' },
+      { label: '进阶 1-3月', desc: '每个任务先估后计，练准估时；用时间块排日程。' },
+      { label: '内化 3-12月', desc: '对自己的节奏了如指掌，能精准排程、守住期限。' }
+    ],
+    research: {
+      points: [
+        '「计划谬误(planning fallacy)」是人类普遍偏差：系统性低估任务耗时；用历史数据校准是已知解法。[1]',
+        '时间块(Time Blocking)将抽象待办落到具体时段，减少决策内耗。'
+      ],
+      method: '时间记录 + 时间块 + 预估×1.5校准'
+    }
+  },
+  {
+    id: 9, code: '09', name: '目标坚持', en: 'Goal-directed Persistence', sub: '盯住长期目标，不被诱惑带偏',
+    concept: '设定目标、坚持到底、不被竞争性诱惑分心的能力。弱的人偏当下、缺乏长期驱动，常常「开了头就换方向」。',
+    scenes: ['做账号做两周就想放弃', '看到别的赛道又想转', '数据没起色就动摇'],
+    stuck: ['目标太远太抽象，看不到进展', '只盯结果，结果没来就泄气'],
+    solutions: ['把长期目标翻译成「每天的最小动作」', '盯过程指标而非结果指标：本周拍了几条 > 涨了几粉', '可视化进度（打卡墙/连续天数），用「不想断链」推动坚持'],
+    practice: [
+      { title: '① 明确目标', desc: '练成「长期盯住一个目标」的耐力。目标：完成一个90天不间断的内容挑战。' },
+      { title: '② 走出舒适区', desc: '用「连续天数」做刻意练习：设一个雷打不动的最小量，每天完成、记录连续天数；逐步提高最小量的质量要求。' },
+      { title: '③ 即时反馈', desc: '打卡墙就是反馈；每周回顾「离90天目标还差多少」，强化进度感。' },
+      { title: '④ 建心理表征', desc: '经常预演「完成90天后的自己」，把长期目标变成具体可感的画面，抵御短期诱惑。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '定下最小量，开始连续打卡。' },
+      { label: '进阶 1-3月', desc: '完成首个连续挑战，建立「我能坚持」的身份认同。' },
+      { label: '内化 3-12月', desc: '长期主义成为默认，能为远期目标稳定投入。' }
+    ],
+    research: {
+      points: [
+        '《掌控习惯》指出，进步是「1%复利」，长期坚持的关键是「基于身份」而非「基于结果」——成为「一个每天更新的人」。[3]',
+        '盯过程指标、可视化连续天数(don\'t break the chain)能显著提升坚持率。[3]'
+      ],
+      method: '身份认同法 + 习惯叠加 + 连续打卡可视化'
+    }
+  },
+  {
+    id: 10, code: '10', name: '灵活变通', en: 'Flexibility', sub: '遇阻、出错、变化时调整计划',
+    concept: '在障碍、挫折、新信息或错误面前修订计划、适应变化的能力。弱的人计划一被打乱就懵，没有Plan B就慌。',
+    scenes: ['选题被人抢先就不知所措', '设备/平台规则变化就停摆', '一个意外打乱全天就摆烂'],
+    stuck: ['把「计划」当成必须100%执行，否则算失败', '遇阻第一反应是放弃而非调整'],
+    solutions: ['预设「如果—那么」预案，给常见意外准备Plan B', '把「变化」重新定义为「信息」而非「失败」：它在告诉你该调整哪里', '降低对单一计划的执念：目标不变，路径可换'],
+    practice: [
+      { title: '① 明确目标', desc: '练成「遇阻快速切换方案」的反应。目标：意外发生后，从「卡住」到「拿出替代方案」控制在10分钟内。' },
+      { title: '② 走出舒适区', desc: '刻意制造「小变化」来练习：故意改变拍摄环境/打乱顺序，逼自己临场调整；事后总结「我是怎么应对的」。' },
+      { title: '③ 即时反馈', desc: '记录每次意外的应对：用了多久恢复、方案是否奏效，找出还能更快的环节。' },
+      { title: '④ 建心理表征', desc: '为常见风险预先想好2-3个Plan B，存成「应急预案库」，遇事直接调取。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '为高频意外写好「如果—那么」预案。' },
+      { label: '进阶 1-3月', desc: '在小变化中练临场调整，建立预案库。' },
+      { label: '内化 3-12月', desc: '面对变化从「慌」变「稳」，能灵活换路径而不弃目标。' }
+    ],
+    research: {
+      points: [
+        '认知灵活性是执行功能的核心子成分；可通过刻意暴露于变化、练习生成替代方案来提升。[7][8]',
+        '「执行意图」同样能帮助从失败路径中抽身、转向Plan B。[5]'
+      ],
+      method: 'if-then应急预案库 + 把「变化」重定义为「反馈」'
+    }
+  },
+  {
+    id: 11, code: '11', name: '元认知', en: 'Metacognition', sub: '跳出来俯视自己、自我监控与复盘',
+    concept: '站在高处俯视自己处境、观察自己如何解决问题、并自我监控与评估的能力。弱的人只见树木不见森林，难以「连点成线」。',
+    scenes: ['反复踩同一个坑却不自知', '只顾埋头做，不复盘不优化', '数据不好却说不清原因'],
+    stuck: ['只做不想，缺少复盘', '复盘流于情绪（自责），不产出可改进的动作'],
+    solutions: ['固定复盘节奏：每天3行(做了什么/有效吗/明天改什么)，每周一次小结', '用「做对了什么/做错了什么/下次怎么做」三问，把复盘导向行动', '跳出第一视角：想象自己是「教练」在观察「运动员」'],
+    practice: [
+      { title: '① 明确目标', desc: '练成「边做边自我观察」的习惯。目标：每条内容都能产出至少1条可执行的改进点。' },
+      { title: '② 走出舒适区', desc: '把每条视频当「实验」：发布前写下假设(这个开头能抓人)，发布后用数据验证，记录结论。持续做这种「假设—验证」循环。' },
+      { title: '③ 即时反馈', desc: '数据 + 复盘笔记就是反馈；定期回看复盘本，看自己是否走出了重复的坑。' },
+      { title: '④ 建心理表征', desc: '逐步建立「什么样的内容为什么会成/会败」的心理模型，让判断越来越准。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '建立每日3行复盘的习惯。' },
+      { label: '进阶 1-3月', desc: '把内容当实验做「假设—验证」，积累规律。' },
+      { label: '内化 3-12月', desc: '形成清晰的内容判断力，能预判并主动优化。' }
+    ],
+    research: {
+      points: [
+        '元认知（对自身思维的监控）是可训练的，刻意练习的核心正是建立「心理表征」并据此自我纠错——高手靠它实时自我评估。[2][10]',
+        '结构化复盘(reflection)被证明能加速技能习得。[10]'
+      ],
+      method: '刻意练习的「假设-验证」循环 + 每日结构化复盘'
+    }
+  },
+  {
+    id: 12, code: '12', name: '压力承受', en: 'Stress Tolerance', sub: '在不确定与高要求中保持产出',
+    concept: '在压力、不确定、变化与表现要求下仍能良好运作的能力。弱的人需要可预测，一旦面对未知或高要求就容易僵住、逃避。',
+    scenes: ['更新压力大到失眠', '怕公开露脸/被评价', '数据起伏带来持续焦虑'],
+    stuck: ['把压力当威胁，身体进入「战或逃」', '忽视恢复，硬扛到耗竭'],
+    solutions: ['管理压力的「硬件」：睡眠、运动、饮食是抗压地基，优先保证', '把压力源拆小：不确定的大事拆成可控的小步，未知越具体越不可怕', '建立「泄压阀」：固定的散步/运动/倾诉，定期清空压力'],
+    practice: [
+      { title: '① 明确目标', desc: '扩大「舒适的压力区间」。目标：能在适度压力（如公开更新承诺）下稳定产出而不崩。' },
+      { title: '② 走出舒适区', desc: '用「渐进暴露」练抗压：从低压场景（发给小圈子）逐步到高压（公开露脸/直播），每成功一次就加一点难度。' },
+      { title: '③ 即时反馈', desc: '记录每次高压任务前后的焦虑值(1-10)与实际表现，看焦虑是否随练习下降。' },
+      { title: '④ 建心理表征', desc: '预演高压场景的成功画面（镜头前从容讲完），并把过往「扛过来了」的经历作为心理证据。' }
+    ],
+    phases: [
+      { label: '起步 前2周', desc: '先把睡眠/运动等抗压硬件补齐。' },
+      { label: '进阶 1-3月', desc: '渐进暴露，从低压到中压场景逐步加码。' },
+      { label: '内化 3-12月', desc: '抗压区间明显扩大，能在不确定与高要求下稳定输出。' }
+    ],
+    research: {
+      points: [
+        '适度压力提升表现、过度压力损害表现（耶克斯-多德森定律）；目标是找到自己的「甜蜜点」。',
+        '渐进暴露(gradual exposure)能系统性扩大抗压区间；睡眠/运动是抗压的生理基础。[8][11]'
+      ],
+      method: '渐进暴露 + 保障睡眠运动 + 自我关怀缓冲'
+    }
+  }
+];
+
+const PHASE_LABELS = ['未开始', '起步阶段', '进阶阶段', '内化阶段'];
+const PHASE_COLORS = ['phase-0', 'phase-1', 'phase-2', 'phase-3'];
+
+// ========== STATE ==========
+let state = {
+  scores: {},      // skillId -> 1-5
+  phases: {},      // skillId -> 0-3
+  logs: [],        // [{date, skillId, did, effect, next, rating, impulse}]
+  weeklies: [],    // [{week, skillId, completion, good, bad, plan, insight, date}]
+  logRating: 3,
+  currentSkill: 1,
+  logFilter: null,
+  lastLogDate: null,
+  streak: 0
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('execTracker_v1');
+    if (s) Object.assign(state, JSON.parse(s));
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('execTracker_v1', JSON.stringify(state));
+  } catch(e) {}
+}
+
+// ========== INIT ==========
+loadState();
+updateDate();
+updateStreak();
+renderOverview();
+renderSkillSelector();
+renderLogSkillSelect();
+renderLogList();
+renderWeekly();
+renderStats();
+
+function updateDate() {
+  const d = new Date();
+  document.getElementById('dateDisplay').textContent = d.toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
+}
+
+function updateStreak() {
+  document.getElementById('streakBadge').textContent = `🔥 连续 ${state.streak || 0} 天`;
+}
+
+// ========== NAV ==========
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  const idx = ['overview','skills','daily','weekly','stats'].indexOf(id);
+  document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');
+  if (id === 'overview') renderOverview();
+  if (id === 'stats') renderStats();
+}
+
+// ========== OVERVIEW ==========
+function renderOverview() {
+  const grid = document.getElementById('overviewGrid');
+  grid.innerHTML = '';
+  SKILLS.forEach(sk => {
+    const score = state.scores[sk.id] || 0;
+    const phase = state.phases[sk.id] || 0;
+    const pct = ((score / 5) * 100).toFixed(0);
+    const div = document.createElement('div');
+    div.className = 'skill-card';
+    div.innerHTML = `
+      <div class="skill-num">${sk.code} · ${sk.en}</div>
+      <div class="skill-name">${sk.name}</div>
+      <div class="skill-sub">${sk.sub}</div>
+      <div class="skill-score-row">
+        <div class="stars" id="ov-stars-${sk.id}">${renderStarsHTML(sk.id, score, 'ov')}</div>
+        <span class="score-label">${score ? score+'/5' : '未评分'}</span>
+      </div>
+      <span class="phase-badge ${PHASE_COLORS[phase]}">${PHASE_LABELS[phase]}</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    `;
+    div.addEventListener('click', (e) => {
+      if (e.target.classList.contains('star')) return;
+      state.currentSkill = sk.id;
+      showSection('skills');
+    });
+    grid.appendChild(div);
+  });
+
+  // Focus skills
+  const sorted = SKILLS.slice().sort((a,b) => (state.scores[a.id]||0) - (state.scores[b.id]||0));
+  const focus = sorted.slice(0, 3);
+  document.getElementById('focusSkills').innerHTML = `
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      ${focus.map(sk => `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;flex:1;min-width:200px;border-left:3px solid var(--accent);">
+          <div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:4px;">${sk.code} ${sk.name} — 得分：${state.scores[sk.id] || '未评'}分</div>
+          <div style="font-size:13px;color:var(--text2);">${sk.sub}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text3);">⬆ 以上为当前最低分技能，建议本季度优先攻克。贪多必败，一次只练1-2项。</div>
+  `;
+}
+
+function renderStarsHTML(skillId, score, prefix) {
+  return [1,2,3,4,5].map(i => `<span class="star" onclick="setScore(${skillId},${i},'${prefix}')" title="${i}分">${i <= score ? '⭐' : '☆'}</span>`).join('');
+}
+
+function setScore(skillId, score, prefix) {
+  state.scores[skillId] = score;
+  saveState();
+  // re-render stars in all places
+  const el = document.getElementById(`${prefix}-stars-${skillId}`);
+  if (el) el.innerHTML = renderStarsHTML(skillId, score, prefix);
+  // also update the card's progress bar & score label
+  renderOverview();
+}
+
+// ========== SKILLS ==========
+function renderSkillSelector() {
+  const area = document.getElementById('skillSelector');
+  area.innerHTML = '';
+  SKILLS.forEach(sk => {
+    const btn = document.createElement('span');
+    btn.className = 'chip' + (sk.id === state.currentSkill ? ' active' : '');
+    btn.textContent = `${sk.code} ${sk.name}`;
+    btn.onclick = () => {
+      state.currentSkill = sk.id;
+      document.querySelectorAll('#skillSelector .chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderSkillDetail();
+    };
+    area.appendChild(btn);
+  });
+  renderSkillDetail();
+}
+
+function renderSkillDetail() {
+  const sk = SKILLS.find(s => s.id === state.currentSkill);
+  if (!sk) return;
+  const score = state.scores[sk.id] || 0;
+  const phase = state.phases[sk.id] || 0;
+  const area = document.getElementById('skillDetailArea');
+  area.innerHTML = `
+    <div class="skill-detail">
+      <div class="skill-detail-header">
+        <div class="skill-detail-title">
+          <h2>${sk.code} · ${sk.name} <span style="font-size:14px;color:var(--text2);font-weight:400">${sk.en}</span></h2>
+          <p>${sk.sub}</p>
+        </div>
+        <div style="text-align:right;">
+          <div class="stars" id="det-stars-${sk.id}">${renderStarsHTML(sk.id, score, 'det')}</div>
+          <div style="margin-top:6px;">
+            <label style="font-size:11px;color:var(--text3);">当前阶段：</label>
+            <select onchange="setPhase(${sk.id},parseInt(this.value))" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 8px;font-size:12px;">
+              ${PHASE_LABELS.map((l,i) => `<option value="${i}" ${i===phase?'selected':''}>${l}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs-inner" id="detTabs">
+        <span class="tab-inner active" onclick="showTab('concept')">📖 概念与场景</span>
+        <span class="tab-inner" onclick="showTab('practice')">🎯 刻意练习设计</span>
+        <span class="tab-inner" onclick="showTab('timeline')">📅 长期时间线</span>
+        <span class="tab-inner" onclick="showTab('research')">🔬 第四部分·研究增强</span>
+      </div>
+
+      <div id="tab-concept">
+        <div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:13px;color:var(--text2);line-height:1.7;">${sk.concept}</div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;">高频场景</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">${sk.scenes.map(s => `<span style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:12px;color:var(--text2);">${s}</span>`).join('')}</div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:700;color:var(--danger);margin-bottom:6px;">⚠ 容易卡住的点</div>
+          <ul style="padding-left:16px;">${sk.stuck.map(s => `<li style="font-size:13px;color:var(--text2);margin-bottom:4px;">${s}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent3);margin-bottom:6px;">✅ 解决方案</div>
+          <ul style="padding-left:16px;">${sk.solutions.map(s => `<li style="font-size:13px;color:var(--text2);margin-bottom:6px;line-height:1.6;">${s}</li>`).join('')}</ul>
+        </div>
+      </div>
+
+      <div id="tab-practice" style="display:none;">
+        <div class="practice-grid">
+          ${sk.practice.map(p => `<div class="practice-item"><h4>${p.title}</h4><p>${p.desc}</p></div>`).join('')}
+        </div>
+      </div>
+
+      <div id="tab-timeline" style="display:none;">
+        <div class="timeline-phases">
+          ${sk.phases.map((p,i) => `
+            <div class="timeline-phase p${i+1}">
+              <h4>${p.label}</h4>
+              <p>${p.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:14px;font-size:12px;color:var(--text3);">核心原则：先求「不断」，再求质量。贪多必败，一次只聚焦1项。</div>
+      </div>
+
+      <div id="tab-research" style="display:none;">
+        <div class="research-box">
+          <h4>🔬 第四部分 · 外部研究与循证方法</h4>
+          <ul>${sk.research.points.map(p => `<li>${p}</li>`).join('')}</ul>
+          <div style="margin-top:8px;"><span class="method-tag">▶ 推荐方法：${sk.research.method}</span></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text3);">
+          来源：[1]Smart but Scattered · [2]Peak刻意练习 · [3]Atomic Habits · [5]Gollwitzer&Sheeran2006元分析 · [6]Sirois&Pychyl2013 · [7]ADDA · [8]PAR-ADHD · [9]Rabin et al. · [10]Frontiers心理学 · [11]PMC情绪调节研究
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <button class="btn btn-primary" onclick="state.currentSkill=${sk.id};showSection('daily')">📝 记录今日练习这项技能</button>
+    </div>
+  `;
+}
+
+function showTab(name) {
+  ['concept','practice','timeline','research'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === name ? 'block' : 'none';
+  });
+  document.querySelectorAll('#detTabs .tab-inner').forEach((b,i) => {
+    b.classList.toggle('active', ['concept','practice','timeline','research'][i] === name);
+  });
+}
+
+function setPhase(skillId, phase) {
+  state.phases[skillId] = phase;
+  saveState();
+}
+
+// ========== DAILY LOG ==========
+let logRating = 3;
+
+function setLogRating(r) {
+  logRating = r;
+  const stars = document.querySelectorAll('#logRating .star');
+  stars.forEach((s, i) => { s.textContent = i < r ? '⭐' : '☆'; });
+}
+
+function renderLogSkillSelect() {
+  const sel = document.getElementById('logSkill');
+  const wSel = document.getElementById('weekSkill');
+  [sel, wSel].forEach(s => {
+    s.innerHTML = SKILLS.map(sk => `<option value="${sk.id}">${sk.code} · ${sk.name}</option>`).join('');
+  });
+  if (state.currentSkill) {
+    sel.value = state.currentSkill;
+  }
+}
+
+function saveLog() {
+  const did = document.getElementById('logDid').value.trim();
+  const effect = document.getElementById('logEffect').value.trim();
+  const next = document.getElementById('logNext').value.trim();
+  const skillId = parseInt(document.getElementById('logSkill').value);
+  const impulse = document.getElementById('logImpulse').value.trim();
+  if (!did) { showMsg('saveMsg', '请填写「做了什么」'); return; }
+
+  const today = new Date().toISOString().split('T')[0];
+  const entry = { date: today, skillId, did, effect, next, rating: logRating, impulse, ts: Date.now() };
+  state.logs.unshift(entry);
+
+  // streak
+  if (state.lastLogDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    if (state.lastLogDate === yesterday) state.streak = (state.streak || 0) + 1;
+    else if (state.lastLogDate !== today) state.streak = 1;
+    state.lastLogDate = today;
+  }
+  updateStreak();
+  saveState();
+
+  // clear
+  ['logDid','logEffect','logNext','logImpulse'].forEach(id => document.getElementById(id).value = '');
+  logRating = 3; setLogRating(3);
+  showMsg('saveMsg', '✓ 已保存！');
+  renderLogList();
+}
+
+function showMsg(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  setTimeout(() => el.textContent = '', 3000);
+}
+
+function renderLogList() {
+  renderLogFilterChips();
+  const list = document.getElementById('logList');
+  let logs = state.logs;
+  if (state.logFilter) logs = logs.filter(l => l.skillId === state.logFilter);
+
+  if (!logs.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📝</div>暂无记录，开始你的第一次练习吧！</div>';
+    return;
+  }
+
+  list.innerHTML = logs.slice(0, 50).map((l, idx) => {
+    const sk = SKILLS.find(s => s.id === l.skillId);
+    const dots = [1,2,3,4,5].map(i => `<div class="dot${i<=l.rating?' filled':''}"></div>`).join('');
+    return `
+      <div class="log-entry">
+        <div class="log-entry-header">
+          <span class="log-entry-date">📅 ${l.date}</span>
+          <span class="log-entry-skill">${sk?.code} ${sk?.name}</span>
+          <button class="btn btn-danger" style="padding:3px 8px;font-size:11px;" onclick="deleteLog(${idx})">删除</button>
+        </div>
+        <div class="log-entry-body">
+          <strong>做了什么：</strong>${l.did}<br>
+          ${l.effect ? `<strong>有效吗：</strong>${l.effect}<br>` : ''}
+          ${l.next ? `<strong>明天改进：</strong>${l.next}<br>` : ''}
+          ${l.impulse ? `<strong>冲动/情绪：</strong>${l.impulse}<br>` : ''}
+          <div class="rating-display">${dots}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteLog(idx) {
+  const filtered = state.logFilter ? state.logs.filter(l => l.skillId === state.logFilter) : state.logs;
+  const entry = filtered[idx];
+  const i = state.logs.indexOf(entry);
+  if (i > -1) { state.logs.splice(i, 1); saveState(); renderLogList(); }
+}
+
+function renderLogFilterChips() {
+  const area = document.getElementById('logFilterChips');
+  area.innerHTML = '';
+  const all = document.createElement('span');
+  all.className = 'chip' + (!state.logFilter ? ' active' : '');
+  all.textContent = '全部';
+  all.onclick = () => { state.logFilter = null; renderLogList(); };
+  area.appendChild(all);
+  SKILLS.forEach(sk => {
+    const cnt = state.logs.filter(l => l.skillId === sk.id).length;
+    if (!cnt) return;
+    const c = document.createElement('span');
+    c.className = 'chip' + (state.logFilter === sk.id ? ' active' : '');
+    c.textContent = `${sk.name} (${cnt})`;
+    c.onclick = () => { state.logFilter = sk.id; renderLogList(); };
+    area.appendChild(c);
+  });
+}
+
+// ========== WEEKLY ==========
+function saveWeekly() {
+  const week = document.getElementById('weekNum').value;
+  const skillId = parseInt(document.getElementById('weekSkill').value);
+  const completion = document.getElementById('weekCompletion').value;
+  const good = document.getElementById('weekGood').value.trim();
+  const bad = document.getElementById('weekBad').value.trim();
+  const plan = document.getElementById('weekPlan').value.trim();
+  const insight = document.getElementById('weekInsight').value.trim();
+  if (!good) { showMsg('weekSaveMsg', '请填写本周做对了什么'); return; }
+
+  state.weeklies.unshift({ week, skillId, completion, good, bad, plan, insight, date: new Date().toISOString().split('T')[0] });
+  saveState();
+  ['weekNum','weekCompletion','weekGood','weekBad','weekPlan','weekInsight'].forEach(id => document.getElementById(id).value = '');
+  showMsg('weekSaveMsg', '✓ 已保存！');
+  renderWeekly();
+}
+
+function renderWeekly() {
+  const totalLogs = state.logs.length;
+  const thisWeek = state.logs.filter(l => {
+    const d = new Date(l.date);
+    const now = new Date();
+    const diff = (now - d) / 86400000;
+    return diff <= 7;
+  }).length;
+  const avgRating = state.logs.length ? (state.logs.reduce((s,l) => s + l.rating, 0) / state.logs.length).toFixed(1) : '-';
+
+  document.getElementById('weeklySummary').innerHTML = `
+    <div class="summary-card"><div class="num">${totalLogs}</div><div class="label">总练习次数</div></div>
+    <div class="summary-card"><div class="num">${thisWeek}</div><div class="label">本周练习次数</div></div>
+    <div class="summary-card"><div class="num">${state.streak || 0}</div><div class="label">当前连续天数</div></div>
+    <div class="summary-card"><div class="num">${avgRating}</div><div class="label">平均自评分</div></div>
+    <div class="summary-card"><div class="num">${state.weeklies.length}</div><div class="label">已完成复盘次数</div></div>
+  `;
+
+  const list = document.getElementById('weeklyList');
+  if (!state.weeklies.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📅</div>完成第一次周复盘，持续进步的关键！</div>';
+    return;
+  }
+  list.innerHTML = state.weeklies.map((w, idx) => {
+    const sk = SKILLS.find(s => s.id === w.skillId);
+    return `
+      <div class="log-entry">
+        <div class="log-entry-header">
+          <span class="log-entry-date">第 ${w.week || '?'} 周 · ${w.date}</span>
+          <span class="log-entry-skill">${sk?.name || ''}</span>
+          ${w.completion ? `<span style="font-size:12px;color:var(--accent3);">完成率 ${w.completion}%</span>` : ''}
+          <button class="btn btn-danger" style="padding:3px 8px;font-size:11px;" onclick="deleteWeekly(${idx})">删除</button>
+        </div>
+        <div class="log-entry-body">
+          <strong>做对了：</strong>${w.good}<br>
+          ${w.bad ? `<strong>踩的坑：</strong>${w.bad}<br>` : ''}
+          ${w.plan ? `<strong>下周策略：</strong>${w.plan}<br>` : ''}
+          ${w.insight ? `<strong>心理表征：</strong>${w.insight}` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteWeekly(idx) {
+  state.weeklies.splice(idx, 1); saveState(); renderWeekly();
+}
+
+// ========== STATS ==========
+function renderStats() {
+  // Skill bars
+  const barsEl = document.getElementById('statsSkillBars');
+  barsEl.innerHTML = SKILLS.map(sk => {
+    const score = state.scores[sk.id] || 0;
+    const pct = (score / 5 * 100).toFixed(0);
+    return `
+      <div class="stat-bar-row">
+        <span class="stat-bar-label">${sk.code} ${sk.name}</span>
+        <div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
+        <span class="stat-bar-val">${score || '-'}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Phase distribution
+  const phaseEl = document.getElementById('statsPhases');
+  phaseEl.innerHTML = PHASE_LABELS.map((l, pi) => {
+    const count = SKILLS.filter(sk => (state.phases[sk.id] || 0) === pi).length;
+    return `
+      <div class="summary-card">
+        <div class="num" style="font-size:24px;">${count}</div>
+        <div class="label">${l}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Activity heatmap (simplified: list last 30 logs)
+  const actEl = document.getElementById('statsActivity');
+  if (!state.logs.length) {
+    actEl.innerHTML = '<div class="empty-state" style="padding:16px;">暂无练习记录</div>';
+  } else {
+    const byDate = {};
+    state.logs.forEach(l => { byDate[l.date] = (byDate[l.date] || 0) + 1; });
+    const dates = Object.keys(byDate).sort().reverse().slice(0, 20);
+    actEl.innerHTML = dates.map(d => `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-size:12px;color:var(--text3);width:90px;">${d}</span>
+        <div style="flex:1;height:6px;background:var(--border);border-radius:3px;">
+          <div style="height:100%;width:${Math.min(100, byDate[d]*30)}%;background:var(--accent);border-radius:3px;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--text2);">${byDate[d]}次</span>
+      </div>
+    `).join('') || '<div style="color:var(--text3);font-size:13px;">暂无数据</div>';
+  }
+
+  // Top 3 skills
+  const skillCounts = {};
+  state.logs.forEach(l => { skillCounts[l.skillId] = (skillCounts[l.skillId] || 0) + 1; });
+  const top3 = Object.entries(skillCounts).sort((a,b) => b[1]-a[1]).slice(0,3);
+  const topEl = document.getElementById('statsTop');
+  if (!top3.length) { topEl.innerHTML = '<div style="color:var(--text3);font-size:13px;">暂无数据</div>'; return; }
+  topEl.innerHTML = top3.map(([id, cnt], i) => {
+    const sk = SKILLS.find(s => s.id == id);
+    const medals = ['🥇','🥈','🥉'];
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:18px;">${medals[i]}</span>
+      <span style="font-size:14px;font-weight:600;">${sk?.name}</span>
+      <span style="font-size:13px;color:var(--text2);">${cnt} 次练习记录</span>
+    </div>`;
+  }).join('');
+}
+
+// ========== EXPORT / IMPORT ==========
+function exportData() {
+  const json = JSON.stringify(state, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `执行力跃迁数据_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  document.getElementById('importFile').click();
+}
+
+function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      Object.assign(state, data);
+      saveState();
+      renderOverview();
+      renderSkillSelector();
+      renderLogList();
+      renderWeekly();
+      renderStats();
+      updateStreak();
+      alert('数据导入成功！');
+    } catch(err) { alert('导入失败，请检查文件格式。'); }
+  };
+  reader.readAsText(file);
+}
+
+// ========== QUIZ INTEGRATION ==========
+// Quiz skill order → tracker skill ID mapping
+// Quiz: 反应抑制,工作记忆,情绪控制,启动任务,持续注意力,计划优先级,组织条理,时间管理,目标坚持,灵活变通,元认知,压力承受
+const QUIZ_TO_TRACKER_ID = [1, 2, 3, 5, 4, 6, 7, 8, 9, 10, 11, 12];
+
+function quizScoreToStars(raw) {
+  // raw: 3-18 → stars: 1-5
+  return Math.min(5, Math.ceil((raw - 2) / 3));
+}
+
+function checkQuizImport() {
+  try {
+    const raw = localStorage.getItem('execTracker_v1');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data.pendingQuizImport) return;
+    const p = data.pendingQuizImport;
+    const banner = document.getElementById('quizImportBanner');
+    const desc = document.getElementById('quizImportDesc');
+    banner.style.display = 'flex';
+    desc.textContent = `来自测试网站的数据（${p.date}）· 12项评分已就绪，导入后自动填入初始分数`;
+  } catch(e) {}
+}
+
+function applyQuizImport() {
+  try {
+    const data = JSON.parse(localStorage.getItem('execTracker_v1') || '{}');
+    const p = data.pendingQuizImport;
+    if (!p) return;
+
+    // Apply scores (only fill empty ones to preserve manual overrides)
+    Object.entries(p.scores).forEach(([id, stars]) => {
+      if (!state.scores[id]) state.scores[id] = stars;
+    });
+
+    // Save this quiz session to history
+    if (!state.quizHistory) state.quizHistory = [];
+    state.quizHistory.push({ date: p.date, scores: p.scores, rawScores: p.rawScores });
+
+    // Clear pending flag
+    delete data.pendingQuizImport;
+    localStorage.setItem('execTracker_v1', JSON.stringify(data));
+
+    // Update local state
+    state.quizHistory = data.quizHistory || state.quizHistory;
+    saveState();
+
+    document.getElementById('quizImportBanner').style.display = 'none';
+    renderOverview();
+    renderStats();
+    showMsg('saveMsg', '');
+    alert('✅ 测试结果已导入！12项技能评分已自动填入。');
+  } catch(e) { alert('导入失败：' + e.message); }
+}
+
+function dismissImportBanner() {
+  document.getElementById('quizImportBanner').style.display = 'none';
+  try {
+    const data = JSON.parse(localStorage.getItem('execTracker_v1') || '{}');
+    delete data.pendingQuizImport;
+    localStorage.setItem('execTracker_v1', JSON.stringify(data));
+  } catch(e) {}
+}
+
+function doManualImport() {
+  const raw = document.getElementById('manualImportInput').value.trim();
+  const parts = raw.split(',').map(s => parseInt(s.trim()));
+  if (parts.length !== 12 || parts.some(isNaN)) {
+    document.getElementById('importModalMsg').textContent = '⚠ 请输入12个数字，用英文逗号分隔';
+    return;
+  }
+  if (parts.some(s => s < 3 || s > 18)) {
+    document.getElementById('importModalMsg').textContent = '⚠ 每项分数应在 3–18 之间';
+    return;
+  }
+  const sessionScores = {};
+  parts.forEach((raw, i) => {
+    const id = QUIZ_TO_TRACKER_ID[i];
+    sessionScores[id] = quizScoreToStars(raw);
+    if (!state.scores[id]) state.scores[id] = sessionScores[id];
+  });
+  if (!state.quizHistory) state.quizHistory = [];
+  state.quizHistory.push({ date: new Date().toISOString().split('T')[0], scores: sessionScores, rawScores: parts });
+  saveState();
+  document.getElementById('importModal').style.display = 'none';
+  renderOverview();
+  renderStats();
+  alert('✅ 测试结果已导入！');
+}
+
+function renderQuizHistory() {
+  const area = document.getElementById('quizHistoryArea');
+  const history = state.quizHistory || [];
+
+  if (!history.length) {
+    area.innerHTML = `
+      <div style="text-align:center;padding:16px;">
+        <div style="font-size:13px;color:var(--text3);margin-bottom:12px;">尚无测试记录。完成测试后数据将自动同步到这里。</div>
+        <a href="https://executive-skills-quiz.vercel.app/" target="_blank" class="btn btn-primary">去做测试 →</a>
+      </div>`;
+    return;
+  }
+
+  // Show progress between sessions
+  const SKILL_NAMES = {1:'反应抑制',2:'工作记忆',3:'情绪控制',4:'持续专注',5:'任务启动',6:'计划优先级',7:'组织条理',8:'时间管理',9:'目标坚持',10:'灵活变通',11:'元认知',12:'压力承受'};
+
+  let html = `<div style="margin-bottom:12px;font-size:13px;color:var(--text2);">共 ${history.length} 次测试记录</div>`;
+
+  if (history.length >= 2) {
+    const first = history[0];
+    const last = history[history.length - 1];
+    const improved = [], declined = [], same = [];
+    QUIZ_TO_TRACKER_ID.forEach(id => {
+      const a = first.scores[id] || 0, b = last.scores[id] || 0;
+      if (b > a) improved.push({id, delta: b-a});
+      else if (b < a) declined.push({id, delta: a-b});
+      else same.push(id);
+    });
+    html += `
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px;">
+        <div style="background:rgba(67,233,123,.1);border:1px solid rgba(67,233,123,.3);border-radius:10px;padding:12px;">
+          <div style="font-size:11px;color:var(--accent3);font-weight:700;margin-bottom:4px;">📈 进步最多</div>
+          ${improved.length ? improved.map(i=>`<div style="font-size:12px;color:var(--text2);">${SKILL_NAMES[i.id]} +${i.delta}⭐</div>`).join('') : '<div style="font-size:12px;color:var(--text3);">暂无</div>'}
+        </div>
+        <div style="background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);border-radius:10px;padding:12px;">
+          <div style="font-size:11px;color:var(--danger);font-weight:700;margin-bottom:4px;">📉 需要关注</div>
+          ${declined.length ? declined.map(i=>`<div style="font-size:12px;color:var(--text2);">${SKILL_NAMES[i.id]} -${i.delta}⭐</div>`).join('') : '<div style="font-size:12px;color:var(--text3);">暂无下滑</div>'}
+        </div>
+      </div>`;
+  }
+
+  // Sessions list
+  html += history.slice().reverse().map((session, i) => `
+    <div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <span style="font-size:13px;font-weight:700;">第 ${history.length - i} 次测试 · ${session.date}</span>
+        <span style="font-size:11px;color:var(--text3);">平均 ${(Object.values(session.scores).reduce((a,b)=>a+b,0)/12).toFixed(1)} ⭐</span>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;">
+        ${QUIZ_TO_TRACKER_ID.map(id => {
+          const s = session.scores[id] || 0;
+          const color = s<=2?'#ff6b6b':s<=3?'#f9c74f':'#43e97b';
+          return `<div style="flex:1;min-width:40px;text-align:center;" title="${SKILL_NAMES[id]}">
+            <div style="height:${s*8}px;min-height:4px;background:${color};border-radius:3px;margin-bottom:3px;"></div>
+            <div style="font-size:9px;color:var(--text3);">${s}⭐</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Retake prompt if last session > 30 days ago
+  if (history.length > 0) {
+    const lastDate = new Date(history[history.length-1].date);
+    const daysSince = Math.floor((Date.now() - lastDate) / 86400000);
+    if (daysSince >= 30) {
+      html = `<div class="retake-card">
+        <p>⏰ 距上次测试已 ${daysSince} 天，建议重测看看进步！</p>
+        <a href="https://executive-skills-quiz.vercel.app/" target="_blank" class="btn btn-primary" style="font-size:13px;">重新测试 →</a>
+      </div>` + html;
+    }
+  }
+
+  area.innerHTML = html;
+}
+
+// Override renderStats to also render quiz history
+const _renderStatsOrig = renderStats;
+function renderStats() {
+  _renderStatsOrig();
+  renderQuizHistory();
+}
+
+// On load: check for pending quiz import
+checkQuizImport();
+</script>
+</body>
+</html>
